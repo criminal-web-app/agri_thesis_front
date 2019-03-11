@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+h4, h5,h6 {
+  color: orangered;
+}
+
+.headerNav{
+  color: cornsilk;
+}
+
+.navbar-nav{
+  flex-direction: row;
+  padding: 0px 0px;
+}
+
+.headerNav{
+  margin-right: 10px;
+}
+
+.row{
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.input-text-sm-pd {
+  padding-left: 10px;
+  font-size: 15px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-right: 0px;
+}
+
+.button-adjust-padding-sm {
+  padding-top:0px!important;
+  padding-left:5px!important;
+  padding-right:5px!important;
+}
+
+.user .ReactTable .rt-tbody .rt-td {
+  align-self: center;
+  text-align: center;
+}
+
+.rt-resizable-header-content{
+  text-align: center;
+}
+
+.dropdown-menu{
+  min-width: 15rem;
+}
+
+.ReactTable.hideHeader .rt-thead.-header{
+  display: none;
+}
+
+.ReactTable.hideHeader .rt-tbody .rt-td{
+  align-self: center
+}
+
+.ReactTable.hideHeader{
+  border: none;
+}
