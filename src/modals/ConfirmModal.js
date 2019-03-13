@@ -21,7 +21,7 @@ class ConfirmModal extends Component {
         const pr = this.props
         let prids = pr.ids || []
         const { itemData, method, takeAction} = this.props;
-        this.setState({isConfirmClick: true, id: itemData.id, ids: prids[0] }, () => {
+        this.setState({isConfirmClick: true }, () => {
             if (typeof method=== "function") {
                 method(itemData)
                     .then( response => {
@@ -78,6 +78,7 @@ class ConfirmModal extends Component {
         const pr = this.props
         const { toast } = this.state     
         const { itemData, isOpen, size, modalTitle, modalBody, enableToaster = true} = this.props
+        console.log(pr)
         return (
             <div>
                 <Modal
@@ -106,7 +107,7 @@ class ConfirmModal extends Component {
                                 </Button>
                                 <Button 
                                     id="confirmButton"
-                                    disabled={ (pr.disableConfirmButton || (st.isConfirmClick || !pr.error)) && (itemData.id === st.id || pr.isConfirmClick) }
+                                    disabled={ (pr.disableConfirmButton ||  pr.isConfirmClick) }
                                     color="primary"
                                     style={
                                         {

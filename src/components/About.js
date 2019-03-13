@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 import { withRouter, NavLink } from 'react-router-dom' 
 import { UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Col, Button } from 'reactstrap'
 
-import { Persist } from 'react-persist'
-
-import * as API from '../services/API'
-import * as Session from '../services/session'
-
 // import { Helpers, lS, DefaultState, TOAST, OPTIONS  } from '../helpers/helpers'
 
 import { FontAwesome } from '../icon.js'

@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { withRouter, NavLink, } from 'react-router-dom' 
-import { Row, Col, Navbar, Nav, UncontrolledDropdown, DropdownToggle, DropdownMenu, Button} from 'reactstrap'
+import { Row, Col, Navbar, Nav, Dropdown, DropdownToggle, DropdownMenu, Input, Button} from 'reactstrap'
 import * as API from '../services/API'
 
 import Loader from './Loader'
 import Login from './Login'
 
-import * as Session from '../services/session'
 import { TOAST } from '../helpers/helpers';
+
+import ConfirmModal from '../modals/ConfirmModal'
+import * as Session from '../services/session'
+
 const qs = require('query-string');
 
 class Header extends Component {
@@ -15,6 +18,9 @@ class Header extends Component {
     state = {
         titleHeader: 'Home',
         query: this.urlSearch.search || '',
+        password: '',
+        confirm_pass: '',
+        dropdownOpen: false,
         pageState: {
             page: (parseInt(this.urlSearch.page || 0) > 0 ? (parseInt(this.urlSearch.page || 0) - 1 ) : 0),
             limit: parseInt(this.urlSearch.limit || 10),
@@ -38,6 +44,12 @@ class Header extends Component {
         })
     }
 
+    changeKeyValue = (key, value) => {
+        this.setState((oldState)=>({
+            [key]: value || !oldState[key]
+        }))
+    }
+
     toggleLoading = (flag) => {
         this.setState(oldState => ({searchLoading: flag}))
     }
@@ -45,50 +57,95 @@ class Header extends Component {
         this.props.history.push(path)
     }
 
-    handleLogOut = () => {
-        API.logout()
+    toggle() {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+
+    changePassword = () => {
+        const {id} = Session.getUser()
+        const body = {
+            password: this.state.password,
+            confirm_password: this.state.confirm_pass
+        }
+        this.setState({isConfirmClick: true})
+        API.changePassword(body,id)
         .then((response)=> {
-            Session.removeUser()
-            this.setState({has_token: false})
-            this.props.history.push('/')
+            this.setState({password: '', confirm_pass: '', isChangePassModalOpen: false})
         },err =>{
             TOAST.pop({message: err.message, type: 'error'})
+        }).finally(()=> {
+            this.setState({isConfirmClick: false})
         })
     }
 
     render() {
         const st=this.state;
-        const has_token = Session.getToken()
+        const user = Session.getUser()
+        const has_token = this.state.has_token || Session.getToken() || user
         return(
-            <div className="mbot-xs-15 header"> 
-                <Row style={{background: 'rgb(252, 168, 108)', margin: 'auto'}}>
+            <div className="header"> 
+                <Row style={{background: 'rgb(87, 122, 4)', margin: 'auto'}}>
                     <Col>
                         <Navbar>
                             <NavLink className="headerNav" to="/">BIO-N</NavLink>
-                            <NavLink className="headerNav" to="/">Home</NavLink>
+                            <NavLink className="headerNav" to="/home">Home</NavLink>
                             <NavLink className="headerNav" to="/about">About</NavLink> 
                             <NavLink className="headerNav" to="/products">Products</NavLink>  
                             {has_token && <NavLink className="headerNav" to="/users">Users</NavLink> }
                             {has_token && <NavLink className="headerNav" to="/reports">Reports</NavLink> }
                             {/* <NavLink className="headerNav" to="/contact-us">Contact Us</NavLink> */}
                                 <Nav className="ml-auto" navbar>
-                                    {has_token ? 
-                                        <Button color="danger" onClick={()=>this.handleLogOut()} style={{padding: '1px 6px'}}>
+                                   
+                                        {/* <Button color="danger" onClick={()=>this.handleLogOut()} style={{padding: '1px 6px'}}>
                                             Log out
-                                        </Button>
-                                        :<UncontrolledDropdown>
-                                            <DropdownToggle style={{padding: '1px 6px'}}>
-                                                Login
+                                        </Button> */}
+                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={()=>this.toggle()}>
+                                            <DropdownToggle style={{padding: '1px 6px', background: 'transparent', border: 'none'}}>
+                                                {has_token ? user.username : 'Login'}
                                             </DropdownToggle>
                                             <DropdownMenu right>
-                                                <Login/>
+                                                <Login that={this}/>
                                             </DropdownMenu>
-                                        </UncontrolledDropdown>
-                                    }
+                                        </Dropdown>
                                 </Nav>
                         </Navbar>
                     </Col>
                 </Row>
+                {console.log(st.password.length)}
+                {console.log(st.password.length<6 || st.confirm_pass.length<6 || st.password !== st.confirm_pass)}
+                <ConfirmModal
+                    size="sm"
+                    takeAction={(e)=> this.changePassword()}
+                    isOpen={st.isChangePassModalOpen || false}
+                    disableConfirmButton={st.password.length<6 || st.confirm_pass.length<6 || st.password !== st.confirm_pass}
+                    isConfirmClick={st.isConfirmClick}
+                    modalTitle={'Change Password'}
+                    disabledConfirmFocus={true}
+                    modalBody={  
+                        <div>
+                            <div align="center" className="margin-bottom-md" >
+                                <Input type="password" className="form-control-sm-font-size mtop-sm-10" value={st.password||''} 
+                                    placeholder="Password"
+                                    onChange={(e)=>{
+                                        this.setState({password: e.target.value})
+                                    }}>
+                                </Input>
+                            </div>
+                            <div align="center" className="margin-bottom-md" >
+                                <Input id="receiver" placeholder="Confirm password" type="password" className="form-control-sm-font-size" 
+                                onChange={(e) =>this.setState({confirm_pass: e.target.value})}
+                                value={st.confirm_pass||''} />
+                            </div>
+                        </div>
+                    }
+                    toggle={
+                        () => {
+                            this.changeKeyValue("isChangePassModalOpen")
+                        }
+                    }
+                />
                 <Loader
                     message={(
                         <div>

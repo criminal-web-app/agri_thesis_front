@@ -73,3 +73,22 @@ h4, h5,h6 {
 .ReactTable.hideHeader{
   border: none;
 }
+
+.carousel-item { 
+  height: 200px;
+}
+
+.carousel-caption{
+  color: black;
+}
+
+/* .carousel .thumb img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.carousel .slide img {
+  max-height: 200px;  
+  width: auto;
+} */
+ 

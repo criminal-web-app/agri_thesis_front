@@ -57,9 +57,6 @@ class ProductAddEdit extends Component {
                         type: "file",
                         isRequired: false,
                         handleInputChange: (e) => {
-                            const formData = new FormData()
-                            formData.append('file', e.target.files[0], e.target.value)
-                            console.log(formData, e.target.files[0])
                             this.setState({file_name : e.target.value, file: e.target.files[0]})
                         }
                     }
@@ -150,7 +147,13 @@ class ProductAddEdit extends Component {
 
     handleUpdateSubmit = (values) => {
         const {id} = this.props.match.params
-        API.updateProduct(values, id)
+        const formData = new FormData();  
+        delete values.file
+        formData.append('name', JSON.stringify(values.name));  
+        formData.append('description', JSON.stringify(values.description));  
+        formData.append('price', values.price);  
+        formData.append("file", this.state.file);  
+        API.updateProduct(formData, id)
         .then((response)=>{
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully updated product!'})

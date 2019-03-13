@@ -2,13 +2,6 @@ import React, { Component } from 'react'
 import { InputGroupAddon, Input, FormFeedback, FormGroup, ListGroupItem } from 'reactstrap'
 import { AvField, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation'
 import { Helpers, lS, DefaultState, TOAST, OPTIONS, gDp  } from '../helpers/helpers'
-import Select from 'react-select';
-import CreatableSelect from 'react-select/lib/Creatable';
-import AsyncSelect from 'react-select/lib/Async'
-import clipboard from "clipboard-polyfill/build/clipboard-polyfill.promise"
-import Toastr from '../helpers/Toastr.js'
-import { components } from 'react-select'
-const { Option } = components;
 
 class inputDisplays extends Component {
 
@@ -117,109 +110,6 @@ class inputDisplays extends Component {
                                                 accept="image/gif, image/jpeg, image/png"
                                             >
                                             </AvField>
-                                        </div>
-                                    )
-                                    : (input.type === 'select-dropdown') ? (
-                                        <div style={input.style}>
-                                            <label>{input.label}</label>
-                                            <div 
-                                                onClick={ (e)=> {gDp(input,'handleInputClick',()=>{})({input, title:key})} }
-                                                onKeyDown={(e)=>{
-                                                    let copyText = (input.selectedOption[0] || {}).label || ''
-                                                    Helpers.onCopy(input.label, copyText)(e)
-                                                }}
-                                            >
-                                                { 
-                                                    input.async ? (
-                                                        <AsyncSelect
-                                                            isMulti={!!input.isMulti}
-                                                            cacheOptions
-                                                            // cache={false}
-                                                            loadOptions={input.loadOptions(timeout)}
-                                                            defaultOptions
-                                                            isDisabled={input.disabled}
-                                                            onChange={input.handleInputChange({input, title: key})}
-                                                            className={ 'react-select-class ' +
-                                                                ( ` ${input.className} `) +
-                                                                (input.disabled ? ' react-select-disabled ' : '') +  
-                                                                ( (!!input.isMulti && (input.selectedOption || []).length > 1) ? ' dynamic-height-unset ' : '') +
-                                                                (Object.keys(input.error || {}).length > 0 ? 'input-error' : '')
-                                                            }
-                                                            value={inputOptionFind.length > 0 
-                                                                    ? inputOptionFind 
-                                                                    : 
-                                                                    !!input.isMulti ? []
-                                                                                    : [{ label: (input.selectedValue || 'Select...'), value: (input.selectedValue || '') }]
-                                                            }
-                                                            components={{ Option: (props) => (
-                                                                <Option {...props}>
-                                                                    {typeof input.customOptionComponents === 'function' ? input.customOptionComponents(props) : props.data.label}
-                                                                </Option>
-                                                            ) }}
-                                                            />
-                                                    ) 
-                                                    : input.acceptAny ? (
-                                                        <CreatableSelect
-                                                            style={{color: '#777'}}
-                                                            formatCreateLabel={(e)=>(<span>"{e}"</span>)}
-                                                            bsSize={"sm"}
-                                                            isDisabled={input.disabled}
-                                                            className={ 'react-select-class ' +
-                                                                ( ` ${input.className} `) + 
-                                                                (input.disabled ? ' react-select-disabled ' : '') + 
-                                                                ( (!!input.isMulti && (input.selectedOption || []).length > 1) ? ' dynamic-height-unset ' : '') +
-                                                                (Object.keys(input.error || {}).length > 0 ? 'input-error' : '')
-                                                            }
-                                                            isMulti={!!input.isMulti}
-                                                            value={inputOptionFind.length > 0 
-                                                                    ? inputOptionFind 
-                                                                    : 
-                                                                    !!input.isMulti ? []
-                                                                                    : [{ label: (input.selectedValue || 'Select...'), value: (input.selectedValue || '') }]
-                                                            }
-                                                            onChange={input.handleInputChange({input, title: key})}
-                                                            options={input.options}
-                                                            components={{ Option: (props) => (
-                                                                <Option {...props}>
-                                                                    {typeof input.customOptionComponents === 'function' ? input.customOptionComponents(props) : props.data.label}
-                                                                </Option>
-                                                            ) }}
-                                                        />
-                                                    )
-                                                    : !input.acceptAny && (
-                                                        <Select
-                                                            {...( typeof input.onHandleInputChange === 'function' ? { onInputChange: input.onHandleInputChange({input, title: key})  }:{})}
-                                                            bsSize={"sm"}
-                                                            className={ 'react-select-class ' + 
-                                                                ( ` ${input.className} `) +
-                                                                (input.disabled ? ' react-select-disabled ' : '') + 
-                                                                (!!input.isMulti && (input.selectedOption || []).length > 1 ? ' dynamic-height-unset ' : '') +
-                                                                (Object.keys(input.error || {}).length > 0 ? 'input-error' : '') + 
-                                                                ((input.pills && (input.selectedOption || []).length > 0) ? 'suspend-css' : '')
-                                                            }
-                                                            isDisabled={input.disabled}
-                                                            value={inputOptionFind}
-                                                            isMulti={!!input.isMulti}
-                                                            onChange={input.handleInputChange({input, title: key})}
-                                                            options={input.options}
-                                                            components={{ Option: (props) => (
-                                                                <Option {...props}>
-                                                                    {typeof input.customOptionComponents === 'function' ? input.customOptionComponents(props) : props.data.label}
-                                                                </Option>
-                                                            ) }}
-                                                            
-                                                            />
-                                                    ) 
-                                                }
-                                            </div>
-                                            <AvField
-                                                required={input.isRequired}
-                                                name={input.name}
-                                                type="hidden"
-                                                value={input.selectedValue||''}
-                                                validate={input.validators || {}}
-                                                onChange={this.onInputChange(input.elementId)}
-                                            />
                                         </div>
                                     )
                                     : (input.type !== 'select' && !input.inputGroup) ? (

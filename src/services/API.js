@@ -10,8 +10,6 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const version = '/v1'
-
 // LOGIN
 
 export const login = (body) => {
@@ -61,18 +59,19 @@ export const createUser = (body) => {
   return queryService(config)
 }
 
-export const updateUser = (body, uId) => {
+export const updateUser = (body, uId, {params={}}) => {
   const config= {}
   config.method = 'PUT'
   config.route = `/users/${uId}`
+  config.params = params
   config.body = body
   return queryService(config)
 }
 
-export const updateUserPassword = (body, uId) => {
+export const changePassword = (body, uId) => {
   const config= {}
   config.method = 'PUT'
-  config.route = `${version}/change-password/${uId}`
+  config.route = `/update-password/${uId}`
   config.body = body
   return queryService(config)
 }
@@ -126,7 +125,13 @@ export const createProduct = (body) => {
     },
     body: body
   })
-  .then(res => res.json())
+  .then(res => {
+    if (res.ok)
+      return res ? res.json() : {}
+      else
+      throw(res.json());
+    }
+  )
   .catch( (err={}) => {
     if (err.then)
       return err.then(function(data) {
@@ -139,21 +144,37 @@ export const createProduct = (body) => {
           }
         )
     }
-  }
-)
-  // const config= {}
-  // config.method = 'POST'
-  // config.route = `/products`
-  // config.body = body
-  // return queryService(config)
+  })
 }
 
 export const updateProduct = (body, uId) => {
-  const config= {}
-  config.method = 'PUT'
-  config.route = `/products/${uId}`
-  config.body = body
-  return queryService(config)
+  return fetch(`${api}/products/${uId}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': Session.getToken(),
+    },
+    body: body
+  })
+  .then(res => {
+    if (res.ok)
+      return res ? res.json() : {}
+      else
+      throw(res.json());
+    }
+  )
+  .catch( (err={}) => {
+    if (err.then)
+      return err.then(function(data) {
+          throw(data);
+      })
+    else {
+        throw(
+          {
+              message: 'Error in Connection'
+          }
+        )
+    }
+  })
 }
 
 export const deleteProduct = (body,id) => {
@@ -161,6 +182,14 @@ export const deleteProduct = (body,id) => {
   config.method = 'PUT'
   config.route = `/delete-product/${id}`
   config.body = body
+  return queryService(config)
+}
+
+// ACTIVITIES
+export const getActivities = () => {
+  const config={}
+  config.method = 'GET'
+  config.route = `/activity`
   return queryService(config)
 }
 
@@ -178,6 +207,13 @@ export const getReport = (params, id) => {
   config.method = 'GET'
   config.route = `/reports/${id}`
   config.params = params
+  return queryService(config)
+}
+
+export const getAverageReports = () => {
+  const config={}
+  config.method = 'GET'
+  config.route = `/average/reports`
   return queryService(config)
 }
 

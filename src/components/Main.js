@@ -4,11 +4,10 @@ import * as Session from '../services/session'
 
 import Header from './Header'
 import About from './About'
-import Register from './Register'
-import Contact from './Contact'
 import Users from './Users'
 import Products from './Products'
 import Reports from './Reports'
+import Home from './Home'
 
 import ProductAddEdit from './products/ProductAddEdit'
 import UserAddEdit from './users/UserAddEdit'
@@ -22,7 +21,6 @@ class Main extends Component {
 
     render() {
         const { menuexpand,isLoading } = this.state
-        const { showSideBar, menu } = this.props;
         Session.setItem("currentPage",this.props.location.pathname)
         const has_token = Session.getToken()
         // if (has_token === null && this.props.location.pathname !== '/login') {
@@ -30,17 +28,14 @@ class Main extends Component {
         // }
         return (
             <div>
-                <Header/>
-                <div style={{ display: "block" }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
+                <Header has_token={has_token}/>
+                <div style={{ display: "block", background: 'rgb(242, 241, 201)', paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
                     <Switch>
+                        <Route exact path="/home" render={()=>(
+                            <Home/>
+                        )}/>
                         <Route exact path="/about" render={()=>(
                             <About/>
-                        )}/>
-                        <Route exact path="/register" render={()=>(
-                            <Register/>
-                        )}/>
-                        <Route exact path="/contact-us" render={()=>(
-                            <Contact/>
                         )}/>
                         <Route exact path="/products" render={()=>(
                             <Products/>
@@ -58,7 +53,7 @@ class Main extends Component {
                             <UserAddEdit method="Create" />
                         )}/>}
                         {has_token && <Route exact path="/user/update/:id" render={()=>(
-                            <UserAddEdit method="Update" hidePass={{display: 'none'}}/>
+                            <UserAddEdit method="Update" />
                         )}/>}
                         {has_token && <Route exact path="/reports" render={()=>(
                             <Reports/>

@@ -22,7 +22,7 @@ const qs = require('query-string');
 class Products extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
-        ...DefaultState,
+        data:[],
         query: this.urlSearch.search || '',
         confirmUser: {name: ''},
         pageState: {
@@ -37,7 +37,7 @@ class Products extends Component {
                 accessor: "file",
                 width: 180,
                 Cell: row=> {
-                    return <img src={row.value} alt="No photo availabe" style={{height: '150px', width: '150px'}}></img>
+                    return <img src={row.value} alt="No photo available" style={{height: '150px', width: '150px'}}></img>
                 }
             },
             {

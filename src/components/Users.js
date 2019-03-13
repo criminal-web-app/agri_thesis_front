@@ -21,7 +21,6 @@ const qs = require('query-string');
 class Users extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
-        ...DefaultState,
         query: this.urlSearch.search || '',
         confirmUser: {username: ''},
         pageState: {
@@ -232,7 +231,7 @@ class Users extends Component {
                     <Row>
                         <Col className="margin-bottom-md">
                             <Row>
-                                <Col md="3" className="margin-bottom-sm">
+                                <Col md="6" lg="3" className="margin-bottom-sm">
                                     <SearchBar
                                         query={st.query}
                                         placeholder={'Search User'}

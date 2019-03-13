@@ -12,6 +12,9 @@ import Loader from '../Loader'
 
 const pass_min = 6
 const qs = require('query-string');
+const roles = [{label: 'admin', value: 'admin'},
+                {label: 'customer', value: 'customer'},
+                {label: 'staff', value: 'staff'}]
 
 class UserAddEdit extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
@@ -101,35 +104,10 @@ class UserAddEdit extends Component {
                     {
                         name: "role",
                         label: "Role",
-                        type: "select-dropdown",
+                        type: "select",
                         isRequired: true,
-                        validators: {
-                            required: {value: true, errorMessage: "Please choose role"}, 
-                        },
-                        options: [],
-                        returnLabel: true,
-                        optionKeys:{
-                            label:'name',
-                            value:'id'
-                        },
-                        handleInputChange: ({input, title}) => (selectedOption)=>{
-                            const st = this.state
-                            const index = st.fields.findIndex(x=>x.title === title)
-                            this.setState({ 
-                                fields: [
-                                    {
-                                        ...st.fields[index],
-                                        inputs: [
-                                            ...st.fields[index].inputs.map(inp=>{ 
-                                                return (inp.name===input.name) ? { ...inp, selectedValue: selectedOption.value } : { ...inp }
-                                            }) 
-                                        ]
-                                    }
-                                    
-                                ] 
-                            })
-                            this.handleEmptyField('role', selectedOption.value)
-                        },
+                        hasEmptyOption: true,
+                        options: roles,
                     },
                     {
                         name: "address",
@@ -183,7 +161,8 @@ class UserAddEdit extends Component {
         API.getUser(id)
         .then((response)=>{
             this.setState({data: {...response.data[0],
-                                  confirm_password: response.data[0].password}})
+                                    confirm_password: '123456',
+                                    password: '123456'}})
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
         })
@@ -199,8 +178,6 @@ class UserAddEdit extends Component {
     }
 
     handleCreateSubmit = (values) => {
-        const role = this.state.roles.filter((role)=> role.name === values.role)[0]
-        values.role = role.id
         API.createUser(values)
         .then((response)=>{
             this.props.history.goBack()
@@ -214,9 +191,11 @@ class UserAddEdit extends Component {
     handleUpdateSubmit = (values) => {
         const {id} = this.props.match.params
         delete values.confirm_password
-        const role = this.state.roles.filter((role)=> role.name === values.role)[0]
-        values.role = role.id
-        API.updateUser(values, id)
+        delete values.password
+        const params = {
+            role : values.role
+        }
+        API.updateUser(values, id, {params})
         .then((response)=>{
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully updated user!'})
@@ -230,50 +209,6 @@ class UserAddEdit extends Component {
         // this.form._inputs.status.value = this.state.defaultStatus
     }
 
-    getRoles = () => { 
-        const params = { 
-            page: 1, 
-            limit: 1000
-        }
-        API.getRoles({params})
-        .then(response => {
-            const st = this.state
-            const { fields } = this.state 
-            const data_role = response.data.filter((role)=> role.id === st.data.role_id)
-            const role_name = data_role.length ? data_role[0].name : ''
-            response = response || {data:[]}
-            const data = response.data.map((role)=> {return {'id': role.id, 'name': role.name, 'label': role.name}})
-            const new_fields = [
-                {
-                    ...fields[0],
-                    inputs: [
-                        ...fields[0].inputs.map((input, idx) => {
-                            if (input.name === 'role') {
-                                return {
-                                    ...input,
-                                    options:data,
-                                    selectedOption: data_role,
-                                    selectedValue: role_name,
-                                }
-                            } else {
-                                return { ...input }
-                            }
-                        })
-                    ]
-                }
-            ]
-            this.setState({ 
-                fields: new_fields,
-                roles: response.data
-            })
-        })
-        .finally(() => {
-            setTimeout(()=> {
-                this.setState({ isLoading:false })
-            }, 100)
-        })
-    }
-
     toggleLoading = (flag) => {
         this.setState(oldState => ({searchLoading: flag}))
     }
@@ -284,7 +219,6 @@ class UserAddEdit extends Component {
     componentDidMount = () => {
         const {method} = this.props
 
-        this.getRoles()
         if(method==='Update'){
             this.getUser()
         }

@@ -9,6 +9,7 @@ import * as Session from '../services/session'
 
 import serializeForm from 'form-serialize'
 import { SyncLoader } from 'react-spinners'
+import { TOAST } from '../helpers/helpers';
 import { FaKey, FaUser } from 'react-icons/fa'
 // import Loader from 'components/Loader'
 
@@ -27,7 +28,6 @@ class Login extends Component {
         const {that} = this.props
         e.preventDefault()
         const values = serializeForm(e.target, { hash: true })
-        // that.setState({logLoading: true})
         this.setState({isLoading: true})
         API.login(values)
         .then((response)=>{
@@ -39,6 +39,7 @@ class Login extends Component {
             //     })
             // } else {
                 Session.saveUser(response.data)
+                that.setState({dropdownOpen: false, has_token: true})
                 this.setState({has_token: true},()=>this.props.history.push('/'))
             // }
         },err => {
@@ -47,19 +48,25 @@ class Login extends Component {
                 errorMessage: err.message
             })
         }).finally(()=> {
-            // that.setState({logLoading: false})
             this.setState({isLoading: false})
         })
     }
 
-    componentDidCatch(error, info) {
-        // Display fallback UI
-        console.log(error,info)
-        console.log('Error')
-        this.setState({ hasError: true });
-        // You can also log the error to an error reporting service
-        // logErrorToMyService(error, info);
-      }
+    handleLogOut = () => {
+        const {that} = this.props
+        API.logout()
+        // this.setState({isLoading: true})
+        .then((response)=> {
+            Session.removeUser()
+            this.setState({has_token: false})
+            that.setState({dropdownOpen: false, has_token: false})
+            this.props.history.push('/')
+        },err =>{
+            TOAST.pop({message: err.message, type: 'error'})
+        }).finally(()=> {
+            this.setState({isLoading: false})
+        })
+    }
 
     componentDidMount(){
         this.setState({has_token: !!Session.getToken()})
@@ -69,55 +76,86 @@ class Login extends Component {
         const { isInvalid, errorMessage, isLoading, has_token } = this.state
         // const has_token = Session.getToken()
         const user = Session.getUser()
-
+        const {that} = this.props
+        console.log(that)
         return ( 
             <div>
-                 <Form className="formClass"
-                    onSubmit={(e)=>this.handleLogin(e)}>
-                    <Row style={{paddingLeft: '15px', paddingRight: '15px', marginBottom: '5px'}}>
-                        <Input 
-                            name="username"
-                            className="details"
-                            placeholder="username"
-                            type="text"
-                            invalid={isInvalid}
-                            required 
-                        />
-                    </Row>
-                    <Row className="mbot-xs-10" style={{paddingLeft: '15px', paddingRight: '15px'}}>
-                        <Input 
-                            name="password"
-                            className="details"
-                            placeholder="password"
-                            type="password"
-                            invalid={isInvalid}
-                            required
-                        />
-                        <FormFeedback className="text-capitalize feedback">{errorMessage}</FormFeedback>
-                    </Row>
-                    <Row>
-                        <Col align="right">
-                            <Button type="submit"
-                                color="info"
-                                className="mbot-xs-10"
-                                style={{float: 'right'}}
-                                disabled={isLoading}
-                                // onClick={(e)=>this.handleLogin(e)}
-                                // size={10}
-                                // block={true}
-                            >
-                                {isLoading ? <SyncLoader
-                                    color='#2f79ef'
-                                    loading={isLoading} 
-                                    size={10}
-                                    style={{
-                                        height: '10px'
-                                    }}
-                                /> : 'Login'}
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
+                {!has_token ? 
+                    <Form className="formClass"
+                        onSubmit={(e)=>this.handleLogin(e)}>
+                        <div style={{paddingLeft: '15px', paddingRight: '15px', marginBottom: '5px'}}>
+                            <Input 
+                                name="username"
+                                className="details"
+                                placeholder="username"
+                                type="text"
+                                invalid={isInvalid}
+                                required 
+                            />
+                        </div>
+                        <div className="mbot-xs-10" style={{paddingLeft: '15px', paddingRight: '15px'}}>
+                            <Input 
+                                name="password"
+                                className="details"
+                                placeholder="password"
+                                type="password"
+                                invalid={isInvalid}
+                                required
+                            />
+                            <FormFeedback className="text-capitalize feedback">{errorMessage}</FormFeedback>
+                        </div>
+                        <Row>
+                            <Col align="right">
+                                <Button type="submit"
+                                    color="info"
+                                    className="mbot-xs-10"
+                                    style={{float: 'right'}}
+                                    disabled={isLoading}
+                                    // onClick={(e)=>this.handleLogin(e)}
+                                    // size={10}
+                                    // block={true}
+                                >
+                                    {isLoading ? <SyncLoader
+                                        color='#f92d16'
+                                        loading={isLoading} 
+                                        size={8}
+                                        style={{
+                                            height: '8px'
+                                        }}
+                                    /> : 'Login'}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                    :
+                    <div>
+                        <Row>
+                            <Col align="right" >
+                                <Button color="info" 
+                                        onClick={()=> this.props.that.setState({isChangePassModalOpen: true})}
+                                        style={{padding: '1px 6px', width: '100%', marginBottom: '5px'}}>
+                                    Change Password
+                                </Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col align="right">
+                                <Button color="danger" 
+                                        onClick={()=>this.handleLogOut()} 
+                                        style={{padding: '1px 6px', width: '100%'}}>
+                                    {isLoading ? <SyncLoader
+                                        color='#f92d16'
+                                        loading={isLoading} 
+                                        size={8}
+                                        style={{
+                                            height: '8px'
+                                        }}
+                                    /> : 'Log out'}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </div>
+                }
             </div>                
         );
     }
