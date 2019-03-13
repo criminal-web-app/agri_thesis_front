@@ -16,6 +16,7 @@ class Reports extends Component {
     state = {
         data:[],
         report:[],
+        average_report: [],
         pageState: {
         },
     }
@@ -23,9 +24,7 @@ class Reports extends Component {
 
     componentDidMount = () => {
         const {id} = this.props.match.params
-        if(!id) {
-            this.retrieveAverageReport()
-        }
+        this.retrieveAverageReport()
         API.getReports()
         .then((response)=>{
             this.setState({data: response.data})
@@ -40,8 +39,8 @@ class Reports extends Component {
     }
 
     componentWillReceiveProps = (newProps) => {
-        console.log('Got new props')
-        const {id} = this.props.match.params
+        const {id} = newProps.match.params
+        console.log(newProps)
         if(!id) {
             this.retrieveReport()
         } else {
@@ -52,6 +51,7 @@ class Reports extends Component {
     retrieveAverageReport = () => {
         API.getAverageReports()
         .then((response)=>{
+            const {id} = this.props.match.params
             const report = [{...response.data,
                 fw1: response.data.avg_fw1, bw1: response.data.avg_bw1,
                 fw2: response.data.avg_fw2, bw2: response.data.avg_bw2,
@@ -63,6 +63,9 @@ class Reports extends Component {
                 fw8: response.data.avg_fw8, bw8: response.data.avg_bw8,
             }]
             this.setState({average_report: report})
+            if(!id){
+                this.setState({report})
+            }
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
         }).finally(()=> 
@@ -72,6 +75,7 @@ class Reports extends Component {
 
     retrieveReport = (id) => {
         const report = id ? this.state.data.filter((report)=> id===report.id) : this.state.average_report
+        console.log(report, this.state.average_report)
         this.setState({report})
     }
 
@@ -79,7 +83,6 @@ class Reports extends Component {
         const st= this.state
         const pr = this.props
         const {id} = this.props.match.params
-        console.log(st)
         const reports = [
             <Button color={!id ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
                 onClick={()=>pr.history.push(`/reports`)}>
@@ -92,6 +95,7 @@ class Reports extends Component {
                 {report.name}
             </Button>
         ))
+        console.log(st)
         const data = st.report.length ? [
             {
                 name: 1, fw: st.report[0].fw1, bw: st.report[0].bw1
@@ -118,6 +122,7 @@ class Reports extends Component {
                 name: 8, fw: st.report[0].fw8, bw: st.report[0].bw8
             },
         ] : ''
+        console.log(data, st.repo)
         const renderCustomAxisTick = ({ x, y, payload }) => {
             let path = '';
         
@@ -152,7 +157,7 @@ class Reports extends Component {
                     </Col>
                     <Col>
                         <BarChart
-                            width={500}
+                            width={800}
                             height={300}
                             data={data}
                             margin={{

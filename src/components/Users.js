@@ -21,6 +21,7 @@ const qs = require('query-string');
 class Users extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
+        data: [],
         query: this.urlSearch.search || '',
         confirmUser: {username: ''},
         pageState: {
@@ -259,22 +260,6 @@ class Users extends Component {
                                     <ReactTable
                                         {...{
                                             ...Helpers.reactTableDefault({st, that: that}),
-                                            getTrProps: (state, rowInfo) => {
-                                                rowInfo = rowInfo || {};
-                                                const {original={}} = rowInfo;
-                                                return {
-                                                    onClick: (e) => {
-                                                        this.setState({
-                                                            selected: original
-                                                        })
-                                                    },
-                                                    style: {
-                                                        background: ( original.id === st.selected.id
-                                                                && typeof original.id !== 'undefined' 
-                                                                ) ? '#A5D59B' : 'inherit'
-                                                    }
-                                                }
-                                            }
                                         }}
                                     />
                                 </Col>
