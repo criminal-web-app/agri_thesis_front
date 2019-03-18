@@ -20,13 +20,14 @@ class UserAddEdit extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
         data: {},
+        isLoading: this.props.method==='Update' ? true : false,
         fields: [
             {
                 title: "User Details",
                 inputs: [
                     {
                         name: "first_name",
-                        label: "First Name",
+                        label: "First Name*",
                         type: "text",
                         isRequired: true,
                         validators: {
@@ -36,7 +37,7 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "last_name",
-                        label: "Last Name",
+                        label: "Last Name*",
                         type: "text",
                         isRequired: true,
                         validators: {
@@ -58,7 +59,7 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "password",
-                        label: "Password",
+                        label: "Password*",
                         type: "password",
                         isRequired: true,
                         style: this.props.hidePass,
@@ -69,7 +70,7 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "confirm_password",
-                        label: "Confirm Password",
+                        label: "Confirm Password*",
                         type: "password",
                         isRequired: true,
                         style: this.props.hidePass,
@@ -80,7 +81,7 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "email",
-                        label: "Email",
+                        label: "Email*",
                         type: "email",
                         isRequired: true,
                         validators: {
@@ -90,20 +91,59 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "phone_number",
-                        label: "Phone Number", 
+                        label: "Phone Number*", 
                         type: "number",
+                        min: "0",
                         isRequired: true, 
                         underscores:0,
+                        number_only: true,
+                        format: "^[0-9]*$",
+                        // hasOnChange: true,
+                        // handleInputChange: (e) => {
+                        //     console.log(e, Helpers.integerOnly(e))
+                        //     this.setState({data: {...this.state.data, phone_number: Helpers.integerOnly(e)}})
+                        // },
                         validators: {
                             required: {value: true, errorMessage: "Please enter contact number"}, 
                             minLength: {value: 11, errorMessage: `Please provide valid number`}, 
                             min: {value: parseInt(9050000000), errorMessage: `Please provide valid number`},
                             max: {value: parseInt(9999999999), errorMessage: `Please provide valid number`}
                         },
+                        // handleInputChange: ({input, title}) => (event)=>{ 
+                        //     const st = this.state
+                        //     const val = event.target.value || ''
+                        //     const bool = event.target.value.includes('_') ? true : false 
+                        //     const underscores = event.target.value.match(/_/g)
+                        //     const n_underscores = (!underscores) ? 0 : underscores.length
+                        //     this.setState({ 
+                        //         fields: [
+                        //             {
+                        //                 ...fields[0],
+                        //                 inputs: [
+                        //                     ...st.fields[index].inputs.map(inp=>{ 
+                        //                         return (inp.name===input.name) ? { 
+                        //                             ...inp, 
+                        //                             invalid: bool,
+                        //                             value:event.target.value,
+                        //                             underscores:n_underscores,
+                        //                             validators:{
+                        //                                 ...inp.validators,
+                        //                                 minLength:{ ...inp.validators.minLength, value:(n_underscores > 0 && n_underscores < 10) ? 17 : 16 },
+                        //                                 maxLength:{ ...inp.validators.maxLength, value:(n_underscores > 0 && n_underscores < 10) ? 17 : 16 }
+                        //                             }
+                        //                         } : { ...inp }
+                        //                     }) 
+                        //                 ]
+                        //             }
+                        //         ] 
+                        //     }, ()=> {
+                        //         this.formHandleChange(input.name, val)
+                        //     })
+                        // }
                     },
                     {
                         name: "role",
-                        label: "Role",
+                        label: "Role*",
                         type: "select",
                         isRequired: true,
                         hasEmptyOption: true,
@@ -111,7 +151,7 @@ class UserAddEdit extends Component {
                     },
                     {
                         name: "address",
-                        label: "Address",
+                        label: "Address*",
                         type: "text",
                         isRequired: true,
                         validators: {
@@ -244,21 +284,21 @@ class UserAddEdit extends Component {
         console.log(st)
         return(
             <Row >
-                <Col lg="10" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
+                <Col lg="6" md="9" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
                     <div > 
-                        {method} User!
+                        <h4 style={{textAlign: 'center'}}>{method} User!</h4>
                         <AvForm onValidSubmit={this.handleSubmit} ref={c => (this.form = c)}> 
                             <Row>
-                                <Col xs={12} sm={12} md={12} lg={6}>
+                                <Col xs={12} sm={12} md={12} lg={10} style={{margin: 'auto'}}>
                                     <InputDisplays 
                                         inputs={inputs}
                                         data={data} 
                                     />
                                 </Col>
-                                <Col xs={12} sm={12} md={12} lg={6}></Col>
+                                {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}
                             </Row>
                             <Row className="margin-bottom-md">
-                                <Col xs={12} sm={12} md={12} lg={6} align="right">
+                                <Col xs={12} sm={12} md={12} lg={10} align="right" style={{margin: 'auto'}}>
                                     <Button 
                                         type="button" 
                                         color="secondary" 
@@ -271,7 +311,7 @@ class UserAddEdit extends Component {
                                         color="primary"
                                         onClick={this.createUser}>Submit</Button>
                                 </Col>
-                                <Col xs={12} sm={12} md={12} lg={6}></Col>
+                                {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}
                             </Row>
                         </AvForm>
                         

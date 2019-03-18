@@ -118,7 +118,7 @@ export const getProduct = (id) => {
 }
 
 export const createProduct = (body) => {
-  fetch(`${api}/products`, {
+  return fetch(`${api}/products`, {
     method: 'POST',
     headers: {
       'Authorization': Session.getToken(),
@@ -186,10 +186,11 @@ export const deleteProduct = (body,id) => {
 }
 
 // ACTIVITIES
-export const getActivities = () => {
+export const getActivities = ({params={}}) => {
   const config={}
   config.method = 'GET'
   config.route = `/activity`
+  config.params = params
   return queryService(config)
 }
 
@@ -210,10 +211,11 @@ export const getReport = (params, id) => {
   return queryService(config)
 }
 
-export const getAverageReports = () => {
+export const getAverageReports = (params={}) => {
   const config={}
   config.method = 'GET'
   config.route = `/average/reports`
+  config.params = params
   return queryService(config)
 }
 

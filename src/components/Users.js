@@ -116,7 +116,7 @@ class Users extends Component {
         response.data = response.data || []
         let configState = {
             data: response.data,
-            total: response.total,
+            total: response.count,
             totalPage: Math.ceil( (response.total || 0) / st.pageState.limit) 
         }
         // configState.totalPage = Math.ceil(configState.data.length / st.pageState.limit) 
@@ -167,10 +167,11 @@ class Users extends Component {
     }
 
     handleSearch = (e) => {
+        console.log('a')
         const that = this;
         const st = this.state
         e.preventDefault()
-        Helpers.handlePage(that, {page: 0, limit: st.pageState.limit, search: st.query, status: st.searchAddDrp.selected, sort_id: st.pageState.sort_id, sort_desc: !!st.pageState.sort_desc, ...st.pageState.filter })
+        Helpers.handlePage(that, {page: 0, limit: st.pageState.limit, search: st.query, sort_id: st.pageState.sort_id, sort_desc: !!st.pageState.sort_desc })
     }
 
     toggleLoading = (flag) => {
@@ -182,16 +183,9 @@ class Users extends Component {
 
     componentDidMount = () => {
         Helpers.callBackMessageToastPop() 
-        const role_permission = lS.get('role_permission').role_permission.filter((module) => module.modules==='USER')
-        role_permission.push(lS.get('role_permission').role_permission.filter((module) => module.modules==='SITE')[0])
-        if(!role_permission[0].has_read){
-            this.props.history.goBack()
-        } else {
-            this.setState({searchLoading: true, mounted: true, checkData:[], data:[]},()=>{
-                this.fetchData()
-            })
-        }
-        this.setState({role_permission})
+        this.setState({searchLoading: true, mounted: true, checkData:[], data:[]},()=>{
+            this.fetchData()
+        })
     }
 
     componentWillReceiveProps(newProps) {
@@ -227,7 +221,7 @@ class Users extends Component {
         console.log(st)
         
         return (
-            <div> 
+            <div style={{margin: '0 5% 15px'}}> 
                 <div className="pad-md">
                     <Row>
                         <Col className="margin-bottom-md">

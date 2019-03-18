@@ -163,20 +163,20 @@ function reactTableDefault({that , st, className='', searchLoading, usePageLimit
         page: parseInt(st.pageState.page),
         onPageChange:(page)=>{
             that.setState({ toggleCheckBoxAll: false },()=>{
-                handlePage(that, {page: page, limit: st.pageState.limit, search: st.pageState.search || undefined, status: st.searchAddDrp.selected || undefined
+                handlePage(that, {page: page, limit: st.pageState.limit, search: st.pageState.search || undefined
                     ,sort_id: st.pageState.sort_id || undefined, sort_desc: !!st.pageState.sort_desc || undefined,
                     ...st.pageState.filter
                 })
             })
         },
         onPageSizeChange:(limit)=>{
-            handlePage(that, {page: 0,limit: limit, search: st.pageState.search || undefined, status: st.searchAddDrp.selected || undefined
+            handlePage(that, {page: 0,limit: limit, search: st.pageState.search || undefined
                 ,sort_id: st.pageState.sort_id || undefined, sort_desc: !!st.pageState.sort_desc || undefined,
                 ...st.pageState.filter
             })
         },
         onSortedChange:(sorted)=>{
-            handlePage(that, {page: st.pageState.page, limit: st.pageState.limit, search: st.pageState.search || undefined, status: st.searchAddDrp.selected || undefined
+            handlePage(that, {page: st.pageState.page, limit: st.pageState.limit, search: st.pageState.search || undefined
                 ,sort_id: (sorted[0]||{}).id || undefined, sort_desc: !!(sorted[0]||{}).desc || undefined,
                 ...st.pageState.filter
             })
@@ -246,7 +246,8 @@ function setDataIterate(field_name, field_value) {
     }
 } 
 function integerOnly(e) {
-    e.target.value= (parseInt(e.target.value)||0) || ''
+    console.log(e,e.target.value)
+    return (parseInt(e.target.value)||0) || ''
 }
 
 export const Helpers = {

@@ -32,16 +32,16 @@ class Login extends Component {
         API.login(values)
         .then((response)=>{
             const role = response.data.role || ''
-            // if(role.toLowerCase()!=='admin'){
-            //     this.setState({
-            //         isInvalid: true,
-            //         errorMessage: 'Must be an admin to log in.'
-            //     })
-            // } else {
+            if(role.toLowerCase()!=='admin'){
+                this.setState({
+                    isInvalid: true,
+                    errorMessage: 'Must be an admin to log in.'
+                })
+            } else {
                 Session.saveUser(response.data)
                 that.setState({dropdownOpen: false, has_token: true})
                 this.setState({has_token: true},()=>this.props.history.push('/'))
-            // }
+            }
         },err => {
             this.setState({
                 isInvalid: true,
@@ -116,12 +116,9 @@ class Login extends Component {
                                     // block={true}
                                 >
                                     {isLoading ? <SyncLoader
-                                        color='#f92d16'
+                                        // color='#f92d16'
                                         loading={isLoading} 
-                                        size={8}
-                                        style={{
-                                            height: '8px'
-                                        }}
+                                        size={4}
                                     /> : 'Login'}
                                 </Button>
                             </Col>

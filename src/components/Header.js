@@ -10,6 +10,9 @@ import { TOAST } from '../helpers/helpers';
 
 import ConfirmModal from '../modals/ConfirmModal'
 import * as Session from '../services/session'
+import {FaCaretLeft, FaCaretDown } from 'react-icons/fa/'
+
+import logo from './Bio-N.ico'
 
 const qs = require('query-string');
 
@@ -89,21 +92,16 @@ class Header extends Component {
                 <Row style={{background: 'rgb(87, 122, 4)', margin: 'auto'}}>
                     <Col>
                         <Navbar>
-                            <NavLink className="headerNav" to="/">BIO-N</NavLink>
-                            <NavLink className="headerNav" to="/home">Home</NavLink>
-                            <NavLink className="headerNav" to="/about">About</NavLink> 
-                            <NavLink className="headerNav" to="/products">Products</NavLink>  
-                            {has_token && <NavLink className="headerNav" to="/users">Users</NavLink> }
-                            {has_token && <NavLink className="headerNav" to="/reports">Reports</NavLink> }
-                            {/* <NavLink className="headerNav" to="/contact-us">Contact Us</NavLink> */}
+                            <NavLink className="headerNav" exact to="/" activeStyle={{textDecoration: 'underline'}}><img src={logo} alt="logo" style={{height: '24px', width: '24px'}}></img>BIO-N</NavLink>
+                            {/* <NavLink className="headerNav" to="/home" activeStyle={{textDecoration: 'underline'}}>Home</NavLink> */}
+                            <NavLink className="headerNav" to="/about" activeStyle={{textDecoration: 'underline'}}>About</NavLink> 
+                            <NavLink className="headerNav" to="/products" activeStyle={{textDecoration: 'underline'}}>Products</NavLink>  
+                            {has_token && <NavLink className="headerNav" to="/users" activeStyle={{textDecoration: 'underline'}}>Users</NavLink> }
+                            {has_token && <NavLink className="headerNav" to="/reports" activeStyle={{textDecoration: 'underline'}}>Reports</NavLink> }
                                 <Nav className="ml-auto" navbar>
-                                   
-                                        {/* <Button color="danger" onClick={()=>this.handleLogOut()} style={{padding: '1px 6px'}}>
-                                            Log out
-                                        </Button> */}
                                         <Dropdown isOpen={this.state.dropdownOpen} toggle={()=>this.toggle()}>
                                             <DropdownToggle style={{padding: '1px 6px', background: 'transparent', border: 'none'}}>
-                                                {has_token ? user.username : 'Login'}
+                                                {has_token ? <div>{user.username} {!this.state.dropdownOpen ? <FaCaretDown/> : <FaCaretLeft/>}</div> : 'Login'}
                                             </DropdownToggle>
                                             <DropdownMenu right>
                                                 <Login that={this}/>

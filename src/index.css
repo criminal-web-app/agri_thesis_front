@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  background: rgb(242, 241, 201);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -54,6 +55,10 @@ h4, h5,h6 {
   text-align: center;
 }
 
+.user .ReactTable{
+  background: #fff;
+}
+
 .rt-resizable-header-content{
   text-align: center;
 }
@@ -82,13 +87,63 @@ h4, h5,h6 {
   color: black;
 }
 
-/* .carousel .thumb img {
-  width: 100% !important;
-  height: 100% !important;
+.recharts-responsive-container {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  height: 300px !important;
+  background-color: #fff;
 }
 
-.carousel .slide img {
-  max-height: 200px;  
-  width: auto;
-} */
- 
+.react-date-range-picker {
+  border: 0.56px solid #ccc;
+  border-radius: 5px;
+  padding-left: 7px;
+  padding-top: 3px;
+  height: 31px;
+  background-color: white;
+}
+
+.react-date-range-picker .remove {
+  position: absolute;
+  top: 26px;
+  right: 17px;
+  text-decoration: none;
+  color: #495057;
+}
+
+.react-date-range-picker > div {
+  display:block!important
+}
+
+.react-date-range-input {
+  color: #495057;
+  font-size: 12px;
+}
+
+.css-1rtrksz {
+  overflow: hidden !important;
+}
+
+/* LOADER */
+.loader {
+  position: fixed;
+  display: inline-grid;
+  top: 0;
+  left: 0;
+  text-align: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: #ffffffad;
+  z-index: 997;
+
+  transition: all 0.25s ease;
+
+}
+
+.-pagination{
+  background: #fff;
+}

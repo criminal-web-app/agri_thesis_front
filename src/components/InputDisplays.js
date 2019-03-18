@@ -5,7 +5,7 @@ import { Helpers, lS, DefaultState, TOAST, OPTIONS, gDp  } from '../helpers/help
 
 class inputDisplays extends Component {
 
-    onInputChange = (elementId) => {
+    onInputChange = (elementId, numbers_only=false) => {
         const element = document.getElementById(elementId)
         if (element) {
             element.addEventListener("keydown", function(e) {
@@ -98,6 +98,37 @@ class inputDisplays extends Component {
                                             </AvField>
                                         </div>
                                     ) 
+                                    : (input.type === 'tel') ? (
+                                        <div style={input.style}>
+                                            <label>{input.label}</label>
+                                            <Input
+                                                // tag={InputMask}
+                                                placeholder={input.label}
+                                                onChange={input.handleInputChange({input, title: key})}
+                                                bsSize={"sm"}
+                                                type="tel"
+                                                mask={input.format}
+                                                value={input.value || ''}
+                                                required={input.isRequired}
+                                                invalid={input.invalid}
+                                                disabled={input.disabled}
+                                            />
+                                            {/* {(input.value.length === 0 && input.invalid) && <FormFeedback>
+                                                {input.validators.required.errorMessage}
+                                            </FormFeedback>}
+                                            {(input.invalid) && <FormFeedback>
+                                                {input.validators.minLength.errorMessage}
+                                            </FormFeedback>} */}
+                                            <AvField
+                                                required={input.isRequired}
+                                                name={input.name}
+                                                type={'hidden'}
+                                                value={input.value || ""}
+                                                validate={input.validators || {}} 
+                                                disabled={input.disabled}
+                                            />
+                                        </div>
+                                    )
                                     : (input.type === 'file') ? (
                                         <div style={input.style}>
                                             <AvField
@@ -129,13 +160,13 @@ class inputDisplays extends Component {
                                                 value={data ? data[input.name] : ""}
                                                 validate={input.validators || {}}
                                                 disabled={input.disabled}
+                                                // pattern={`"${input.pattern}"` || {}}
                                                 onChange={(e)=>{
                                                     this.onInputChange(input.elementId)
                                                     if (input.hasOnChange) {
                                                         input.handleInputChange(e.target.value)
                                                     }
                                                 }}
-                                                {...(input.hasGrid) ? {grid:input.gridStyle} : {}}
                                             />
                                         </div>
                                     )
@@ -161,6 +192,7 @@ class inputDisplays extends Component {
                                                     value={data ? data[input.name] : ""} 
                                                     validate={input.validators || {}}
                                                     disabled={input.disabled}
+                                                    min={input.min}
                                                     // step={input.validators.step.value}
                                                     {...(input.validators.min) ? {min:input.validators.min.value} : {}}
                                                     onChange={this.onInputChange(input.elementId)}

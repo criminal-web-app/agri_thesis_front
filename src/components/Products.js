@@ -35,7 +35,7 @@ class Products extends Component {
                 Header: "Pictures",
                 headerClassName: 'text-left',
                 accessor: "file",
-                width: 180,
+                width: 250,
                 Cell: row=> {
                     return <img src={row.value} alt="No photo available" style={{height: '150px', width: '150px'}}></img>
                 }
@@ -165,16 +165,9 @@ class Products extends Component {
 
     componentDidMount = () => {
         Helpers.callBackMessageToastPop() 
-        const role_permission = lS.get('role_permission').role_permission.filter((module) => module.modules==='USER')
-        role_permission.push(lS.get('role_permission').role_permission.filter((module) => module.modules==='SITE')[0])
-        if(!role_permission[0].has_read){
-            this.props.history.goBack()
-        } else {
-            this.setState({searchLoading: true, mounted: true, checkData:[], data:[]},()=>{
-                this.fetchData()
-            })
-        }
-        this.setState({role_permission})
+        this.setState({searchLoading: true, mounted: true, checkData:[], data:[]},()=>{
+            this.fetchData()
+        })
     }
 
     componentWillMount(){
@@ -221,7 +214,7 @@ class Products extends Component {
         ]
         
         return (
-            <div> 
+            <div style={{margin: '0 5% 15px'}}> 
                 <div className="pad-md">
                     <Row>
                         <Col className="margin-bottom-md">

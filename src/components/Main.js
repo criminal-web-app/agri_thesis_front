@@ -31,7 +31,7 @@ class Main extends Component {
                 <Header has_token={has_token}/>
                 <div style={{ display: "block", background: 'rgb(242, 241, 201)', paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
                     <Switch>
-                        <Route exact path="/home" render={()=>(
+                        <Route exact path="/" render={()=>(
                             <Home/>
                         )}/>
                         <Route exact path="/about" render={()=>(

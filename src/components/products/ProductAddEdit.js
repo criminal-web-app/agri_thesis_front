@@ -18,7 +18,7 @@ class ProductAddEdit extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
         data: {},
-        isLoading: true,
+        isLoading: this.props.method==='Update' ? true : false,
         fields: [
             {
                 title: "Product Details",
@@ -44,7 +44,7 @@ class ProductAddEdit extends Component {
                     {
                         name: "price",
                         label: "Price",
-                        type: "float",
+                        type: "number",
                         isRequired: true,
                         pre: 'P',
                         validators: {
@@ -119,9 +119,11 @@ class ProductAddEdit extends Component {
 
     handleSubmit = (event, values) => {
         const {method} = this.props
+        console.log(method,method==='Create')
         if(method==='Create'){
             this.handleCreateSubmit(values)
         } else {
+            console.log('!',method)
             this.handleUpdateSubmit(values)
         }
     }
@@ -130,17 +132,15 @@ class ProductAddEdit extends Component {
         // values.file = this.state.file
         delete values.file
         const formData = new FormData();  
-        formData.append('name', JSON.stringify(values.name));  
-        formData.append('description', JSON.stringify(values.description));  
+        formData.append('name', values.name);  
+        formData.append('description', values.description);  
         formData.append('price', values.price);  
         formData.append("file", this.state.file);  
-            // return formData;
         API.createProduct(formData)
         .then((response)=>{
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully created product!'})
         }, err => {
-            console.log(err)
             TOAST.pop({message: err.message, type: 'error'})
         })
     } 
@@ -149,9 +149,9 @@ class ProductAddEdit extends Component {
         const {id} = this.props.match.params
         const formData = new FormData();  
         delete values.file
-        formData.append('name', JSON.stringify(values.name));  
-        formData.append('description', JSON.stringify(values.description));  
-        formData.append('price', values.price);  
+        formData.append('name', values.name);  
+        formData.append('description', values.description);  
+        formData.append('price', values.price); 
         formData.append("file", this.state.file);  
         API.updateProduct(formData, id)
         .then((response)=>{
@@ -180,16 +180,6 @@ class ProductAddEdit extends Component {
         if(method==='Update'){
             this.getProduct()
         }
-        // const role_permission = lS.get('role_permission').role_permission.filter((module) => module.modules==='COUNTRY')
-        // if(!role_permission[0].has_read){
-        //     this.props.history.goBack()
-        // } else {
-        //     Helpers.callBackMessageToastPop() 
-        //     this.setState({searchLoading: true, mounted: true, checkData:[], data:[]},()=>{
-        //         this.fetchData()
-        //     })
-        // }
-        // this.setState({role_permission})
     }
 
     componentWillUnmount() {
@@ -212,24 +202,24 @@ class ProductAddEdit extends Component {
         console.log(st)
         return(
             <Row >
-                <Col lg="11" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
+                <Col lg="8" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
                     <Loader 
                         isLoading={st.isLoading || false}
                     />
                     <div > 
-                        {method} Products!
+                        <h4 style={{textAlign: 'center'}}>{method} Products!</h4>
                         <AvForm onValidSubmit={this.handleSubmit} ref={c => (this.form = c)}> 
                             <Row>
-                                <Col xs={12} sm={12} md={12} lg={6}>
+                                <Col xs={12} sm={12} md={12} lg={10} style={{margin: 'auto'}}>
                                     <InputDisplays 
                                         inputs={inputs}
                                         data={data} 
                                     />
                                 </Col>
-                                <Col xs={12} sm={12} md={12} lg={6}></Col>
+                                {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}
                             </Row>
                             <Row className="margin-bottom-md">
-                                <Col xs={12} sm={12} md={12} lg={6} align="right">
+                                <Col xs={12} sm={12} md={12} lg={10} align="right" style={{margin: 'auto'}}>
                                     <Button 
                                         type="button" 
                                         color="secondary" 
@@ -242,7 +232,7 @@ class ProductAddEdit extends Component {
                                         color="primary"
                                         onClick={this.createUser}>Submit</Button>
                                 </Col>
-                                <Col xs={12} sm={12} md={12} lg={6}></Col>
+                                {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}
                             </Row>
                         </AvForm>
                         
