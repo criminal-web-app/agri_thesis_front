@@ -27,6 +27,8 @@ class Users extends Component {
         pageState: {
             page: (parseInt(this.urlSearch.page || 0) > 0 ? (parseInt(this.urlSearch.page || 0) - 1 ) : 0),
             limit: parseInt(this.urlSearch.limit || 10),
+            sort_id: this.urlSearch.sort_id || '',
+            sort_desc: this.urlSearch.sort_desc || 'desc',
             search: this.urlSearch.search || '',
         },
         columns: [
@@ -68,6 +70,7 @@ class Users extends Component {
             },{
                 Header: "Date",
                 headerClassName: 'text-left',
+                sortable: false,
                 accessor: "created",
                 Cell: row=> Helpers.handleDate(row.value, DATE_FORMAT)
             },
@@ -117,7 +120,7 @@ class Users extends Component {
         let configState = {
             data: response.data,
             total: response.count,
-            totalPage: Math.ceil( (response.total || 0) / st.pageState.limit) 
+            totalPage: Math.ceil( (response.count || 0) / st.pageState.limit) 
         }
         // configState.totalPage = Math.ceil(configState.data.length / st.pageState.limit) 
         this.setState(configState)
@@ -143,14 +146,16 @@ class Users extends Component {
         const st = this.state
         this.toggleLoading(true)
         const params = { 
-            page: (st.pageState.page+1), 
+            page: (st.pageState.page+1),
             limit: st.pageState.limit,
-            search: st.pageState.search
+            search: st.pageState.search,
+            sort_id: st.pageState.sort_id || '',
+            sort_desc: (!st.pageState.sort_id) ? '' :
+                       (st.pageState.sort_desc || '').toString() === 'true' ? 'desc' : 'asc',
         }
 
         API.getUsers({params})
             .then(response => { 
-                console.log(response)
                 this.responseGetItems(response) 
             }, err=> {
                 this.setState({data:[]});
@@ -167,7 +172,6 @@ class Users extends Component {
     }
 
     handleSearch = (e) => {
-        console.log('a')
         const that = this;
         const st = this.state
         e.preventDefault()
@@ -199,6 +203,8 @@ class Users extends Component {
                     page: parseInt(pageQs.page || 0) > 0 ? ( parseInt(pageQs.page || 0) - 1): 0,
                     limit: parseInt(pageQs.limit || 10),
                     search: st.query,
+                    sort_id: pageQs.sort_id || st.pageState.sort_id,
+                    sort_desc: !!pageQs.sort_desc,
                 } 
             },()=>{
                 this.fetchData();
@@ -218,7 +224,6 @@ class Users extends Component {
         st.columns = [
             ...this.prevColumn,
         ]
-        console.log(st)
         
         return (
             <div style={{margin: '0 5% 15px'}}> 
@@ -226,7 +231,7 @@ class Users extends Component {
                     <Row>
                         <Col className="margin-bottom-md">
                             <Row>
-                                <Col md="6" lg="3" className="margin-bottom-sm">
+                                <Col md="3" className="margin-bottom-sm"  style={{marginBottom: '10px'}}>
                                     <SearchBar
                                         query={st.query}
                                         placeholder={'Search User'}
@@ -235,7 +240,7 @@ class Users extends Component {
                                         onChangeQuery={(e) => {this.setState({query: e.target.value})}}
                                     />  
                                 </Col>
-                                <Col align="right">
+                                <Col align="right" style={{marginBottom: '10px'}}> 
                                     <Button color="primary" onClick={()=>this.props.history.push('/user/create')}>
                                         Add User
                                     </Button>

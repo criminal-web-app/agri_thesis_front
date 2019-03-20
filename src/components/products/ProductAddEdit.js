@@ -113,17 +113,16 @@ class ProductAddEdit extends Component {
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
         }).finally(()=> 
-            this.setState({isLoading: false})
+            this.setState({isLoading: false, has_submit: false})
         )
     }
 
     handleSubmit = (event, values) => {
         const {method} = this.props
-        console.log(method,method==='Create')
+        this.setState({has_submit: true})
         if(method==='Create'){
             this.handleCreateSubmit(values)
         } else {
-            console.log('!',method)
             this.handleUpdateSubmit(values)
         }
     }
@@ -135,14 +134,16 @@ class ProductAddEdit extends Component {
         formData.append('name', values.name);  
         formData.append('description', values.description);  
         formData.append('price', values.price);  
-        formData.append("file", this.state.file);  
+        this.state.file && formData.append("file", this.state.file);  
         API.createProduct(formData)
         .then((response)=>{
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully created product!'})
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
-        })
+        }).finally(()=> 
+            this.setState({has_submit: false})
+        )
     } 
 
     handleUpdateSubmit = (values) => {
@@ -152,14 +153,16 @@ class ProductAddEdit extends Component {
         formData.append('name', values.name);  
         formData.append('description', values.description);  
         formData.append('price', values.price); 
-        formData.append("file", this.state.file);  
+        this.state.file && formData.append("file", this.state.file);  
         API.updateProduct(formData, id)
         .then((response)=>{
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully updated product!'})
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
-        })
+        }).finally(()=> 
+        this.setState({has_submit: false})
+        )
     } 
 
     resetForm = () => {
@@ -199,7 +202,6 @@ class ProductAddEdit extends Component {
                 [step.title]: step.inputs,
             }
         }, {})
-        console.log(st)
         return(
             <Row >
                 <Col lg="8" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
@@ -230,6 +232,7 @@ class ProductAddEdit extends Component {
                                         type="submit" 
                                         // className="float-right" 
                                         color="primary"
+                                        disabled={st.has_submit}
                                         onClick={this.createUser}>Submit</Button>
                                 </Col>
                                 {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}

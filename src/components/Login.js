@@ -77,7 +77,6 @@ class Login extends Component {
         // const has_token = Session.getToken()
         const user = Session.getUser()
         const {that} = this.props
-        console.log(that)
         return ( 
             <div>
                 {!has_token ? 

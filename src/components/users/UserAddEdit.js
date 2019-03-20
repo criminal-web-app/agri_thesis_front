@@ -98,11 +98,6 @@ class UserAddEdit extends Component {
                         underscores:0,
                         number_only: true,
                         format: "^[0-9]*$",
-                        // hasOnChange: true,
-                        // handleInputChange: (e) => {
-                        //     console.log(e, Helpers.integerOnly(e))
-                        //     this.setState({data: {...this.state.data, phone_number: Helpers.integerOnly(e)}})
-                        // },
                         validators: {
                             required: {value: true, errorMessage: "Please enter contact number"}, 
                             minLength: {value: 11, errorMessage: `Please provide valid number`}, 
@@ -210,6 +205,7 @@ class UserAddEdit extends Component {
 
     handleSubmit = (event, values) => {
         const {method} = this.props
+        this.setState({has_submit: true})
         if(method==='Create'){
             this.handleCreateSubmit(values)
         } else {
@@ -223,9 +219,10 @@ class UserAddEdit extends Component {
             this.props.history.goBack()
             TOAST.pop({message: 'Successfully created user!'})
         }, err => {
-            console.log(err)
             TOAST.pop({message: err.message, type: 'error'})
-        })
+        }).finally(()=> 
+            this.setState({has_submit: false})
+        )
     } 
 
     handleUpdateSubmit = (values) => {
@@ -241,7 +238,9 @@ class UserAddEdit extends Component {
             TOAST.pop({message: 'Successfully updated user!'})
         },err => {
             TOAST.pop({message: err.message, type: 'error'})
-        })
+        }).finally(()=> 
+            this.setState({has_submit: false})
+        )
     } 
 
     resetForm = () => {
@@ -281,7 +280,6 @@ class UserAddEdit extends Component {
                 [step.title]: step.inputs,
             }
         }, {})
-        console.log(st)
         return(
             <Row >
                 <Col lg="6" md="9" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
@@ -309,6 +307,7 @@ class UserAddEdit extends Component {
                                         type="submit" 
                                         // className="float-right" 
                                         color="primary"
+                                        disabled={st.has_submit}
                                         onClick={this.createUser}>Submit</Button>
                                 </Col>
                                 {/* <Col xs={12} sm={12} md={12} lg={6}></Col> */}

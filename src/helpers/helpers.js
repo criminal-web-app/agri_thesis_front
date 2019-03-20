@@ -218,7 +218,6 @@ function getDataIterate (field_name) {
         var returnValue
         for (var property in newObj) {
             if (newObj.hasOwnProperty(property)) {
-                // console.log(property === field_name)
                 if (property === field_name) {
                     returnValue = newObj[property]
                 }
@@ -246,7 +245,6 @@ function setDataIterate(field_name, field_value) {
     }
 } 
 function integerOnly(e) {
-    console.log(e,e.target.value)
     return (parseInt(e.target.value)||0) || ''
 }
 

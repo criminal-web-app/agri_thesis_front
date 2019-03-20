@@ -78,7 +78,6 @@ class ConfirmModal extends Component {
         const pr = this.props
         const { toast } = this.state     
         const { itemData, isOpen, size, modalTitle, modalBody, enableToaster = true} = this.props
-        console.log(pr)
         return (
             <div>
                 <Modal

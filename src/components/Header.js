@@ -111,8 +111,6 @@ class Header extends Component {
                         </Navbar>
                     </Col>
                 </Row>
-                {console.log(st.password.length)}
-                {console.log(st.password.length<6 || st.confirm_pass.length<6 || st.password !== st.confirm_pass)}
                 <ConfirmModal
                     size="sm"
                     takeAction={(e)=> this.changePassword()}

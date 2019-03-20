@@ -94,7 +94,6 @@ class Products extends Component {
         const st = this.state
         response = response || {data:[]}
         response.data = response.data || []
-        console.log(response.data)
         let configState = {
             data: response.data,
             total: response.total,
@@ -118,7 +117,6 @@ class Products extends Component {
 
         API.getProducts({params})
             .then(response => { 
-                console.log(response)
                 this.responseGetItems(response) 
             }, err=> {
                 this.setState({data:[]});
@@ -176,7 +174,6 @@ class Products extends Component {
         this.setState({has_token})
         if(!has_token){
             columns.splice(2,1)
-            console.log(columns)
             this.setState({columns: columns})
         }
     }
