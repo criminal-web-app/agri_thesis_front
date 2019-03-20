@@ -1,6 +1,6 @@
 import * as Session from '../services/session';
 
-const api = `https://criminal-web-app.herokuapp.com/v1`
+const api = `http://52.74.149.38:8084/v1`
 const qs = require('query-string');
 let token = Session.getToken()
 
