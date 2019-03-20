@@ -32,12 +32,12 @@ class Users extends Component {
             search: this.urlSearch.search || '',
         },
         columns: [
-            {
-                Header: "ID",
-                headerClassName: 'text-left',
-                accessor: "id",
-                Cell: row=> Helpers.handleDisplay(row.value)
-            },
+            // {
+            //     Header: "ID",
+            //     headerClassName: 'text-left',
+            //     accessor: "id",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
             {
                 Header: "Username",
                 headerClassName: 'text-left',

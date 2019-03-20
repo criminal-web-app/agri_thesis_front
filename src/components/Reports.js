@@ -97,12 +97,12 @@ class Reports extends Component {
             )
             this.setState({data: newData})
             // this.setState({data: response.data})
-            this.fetchData(id)
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
-        }).finally(()=> 
+        }).finally(()=> {
             this.setState({isLoading: false})
-        )
+            this.fetchData(id)
+        })
     }
 
     componentWillReceiveProps = (newProps) => {
