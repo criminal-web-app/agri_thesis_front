@@ -184,7 +184,7 @@ class Reports extends Component {
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <Row>
-                    <Col sm="12" md="3">
+                    <Col sm="12" md="3" style={{overflowY:'auto', marginBottom: '10px'}} className="report-buttons">
                         {reports}
                     </Col>
                     <Col sm="12" md="9">

@@ -93,8 +93,19 @@ h4, h5,h6 {
   box-sizing: border-box;
   padding: 10px;
   width: 100%;
-  height: 300px !important;
+  height: 80vh !important;
   background-color: #fff;
+}
+
+.report-buttons{
+  height: 85vh !important
+}
+
+@media screen and (max-width: 600px) {
+  .recharts-responsive-container, .report-buttons {
+    width: 100%;
+    height: 40vh !important;
+  }
 }
 
 .react-date-range-picker {

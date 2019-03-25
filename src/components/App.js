@@ -29,7 +29,8 @@ class App extends Component {
       '/contact-us',
       '/users',
       '/products',
-      '/reports'
+      '/reports',
+      '/orders'
       
     ]
     if (Session.getToken()) {

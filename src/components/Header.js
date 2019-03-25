@@ -97,6 +97,7 @@ class Header extends Component {
                             <NavLink className="headerNav" to="/about" activeStyle={{textDecoration: 'underline'}}>About</NavLink> 
                             <NavLink className="headerNav" to="/products" activeStyle={{textDecoration: 'underline'}}>Products</NavLink>  
                             {has_token && <NavLink className="headerNav" to="/users" activeStyle={{textDecoration: 'underline'}}>Users</NavLink> }
+                            {has_token && <NavLink className="headerNav" to="/orders" activeStyle={{textDecoration: 'underline'}}>Orders</NavLink> }
                             {has_token && <NavLink className="headerNav" to="/reports" activeStyle={{textDecoration: 'underline'}}>Reports</NavLink> }
                                 <Nav className="ml-auto" navbar>
                                         <Dropdown isOpen={this.state.dropdownOpen} toggle={()=>this.toggle()}>

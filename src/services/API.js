@@ -1,6 +1,6 @@
 import * as Session from '../services/session';
 
-const api = `http://52.74.149.38:8084/v1`
+const api = `http://52.74.76.145:8084/v1`
 const qs = require('query-string');
 let token = Session.getToken()
 
@@ -190,6 +190,15 @@ export const getActivities = ({params={}}) => {
   const config={}
   config.method = 'GET'
   config.route = `/activity`
+  config.params = params
+  return queryService(config)
+}
+
+// ORDERS
+export const getOrders = ({params={}}) => {
+  const config={}
+  config.method = 'GET'
+  config.route = `/orders`
   config.params = params
   return queryService(config)
 }

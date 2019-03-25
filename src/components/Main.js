@@ -7,6 +7,7 @@ import About from './About'
 import Users from './Users'
 import Products from './Products'
 import Reports from './Reports'
+import Orders from './Orders'
 import Home from './Home'
 
 import ProductAddEdit from './products/ProductAddEdit'
@@ -60,6 +61,9 @@ class Main extends Component {
                         )}/>}
                         {has_token && <Route exact path="/report/:id" render={()=>(
                             <Reports/>
+                        )}/>}
+                        {has_token && <Route exact path="/orders" render={()=>(
+                            <Orders/>
                         )}/>}
                     </Switch>
                 </div>
