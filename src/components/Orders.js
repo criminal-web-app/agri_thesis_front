@@ -88,7 +88,7 @@ class Products extends Component {
             search: st.pageState.search,
             sort_id: st.pageState.sort_id || '',
             sort_desc: (!st.pageState.sort_id) ? '' :
-                       (st.pageState.sort_desc || '').toString() === 'true' ? 'desc' : 'asc',
+                       (st.pageState.sort_desc || '').toString() === 'true' ? st.pageState.sort_desc : 'desc',
             is_read: st.filter === 'READ' ? 'true' : st.filter ==='UNREAD' ? 'false' : '',
             is_completed: st.filter === 'COMPLETE' ? 'true' : '',
         }
