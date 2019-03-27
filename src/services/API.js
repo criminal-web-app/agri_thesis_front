@@ -203,6 +203,20 @@ export const getOrders = ({params={}}) => {
   return queryService(config)
 }
 
+export const getOrder = (id) => {
+  const config={}
+  config.method = 'GET'
+  config.route = `/orders/${id}`
+  return queryService(config)
+}
+
+export const completeOrder = (id) => {
+  const config={}
+  config.method = 'PUT'
+  config.route = `/orders/${id}`
+  return queryService(config)
+}
+
 // REPORTS
 
 export const getReports = () => {

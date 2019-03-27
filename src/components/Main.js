@@ -13,6 +13,8 @@ import Home from './Home'
 import ProductAddEdit from './products/ProductAddEdit'
 import UserAddEdit from './users/UserAddEdit'
 
+import OrderDetails from './OrderDetails'
+
 class Main extends Component {
     state = {
         menuexpand: true,
@@ -64,6 +66,9 @@ class Main extends Component {
                         )}/>}
                         {has_token && <Route exact path="/orders" render={()=>(
                             <Orders/>
+                        )}/>}
+                        {has_token && <Route exact path="/order/:id" render={()=>(
+                            <OrderDetails/>
                         )}/>}
                     </Switch>
                 </div>

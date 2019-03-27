@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter, NavLink } from 'react-router-dom' 
-import { Row, Col, Button } from 'reactstrap'
+import { Row, Col, Button, Input } from 'reactstrap'
 import ReactTable from 'react-table'
 
 import * as API from '../services/API'
@@ -13,6 +13,7 @@ import ConfirmModal from '../modals/ConfirmModal'
 
 import {FaTrashAlt, FaEdit} from 'react-icons/fa/'
 import Loader from './Loader'
+const moment = require('moment');
 
 const qs = require('query-string');
 
@@ -27,7 +28,7 @@ class Products extends Component {
         pageState: {
             page: (parseInt(this.urlSearch.page || 0) > 0 ? (parseInt(this.urlSearch.page || 0) - 1 ) : 0),
             limit: parseInt(this.urlSearch.limit || 10),
-            sort_id: this.urlSearch.sort_id || '',
+            sort_id: this.urlSearch.sort_id || 'created',
             sort_desc: this.urlSearch.sort_desc || 'desc',
             search: this.urlSearch.search || '',
         },
@@ -82,14 +83,16 @@ class Products extends Component {
         const st = this.state
         this.toggleLoading(true)
         const params = { 
-            page: (st.pageState.page+1),
-            limit: st.pageState.limit,
+            // page: (st.pageState.page+1),
+            // limit: st.pageState.limit,
             search: st.pageState.search,
             sort_id: st.pageState.sort_id || '',
             sort_desc: (!st.pageState.sort_id) ? '' :
                        (st.pageState.sort_desc || '').toString() === 'true' ? 'desc' : 'asc',
+            is_read: st.filter === 'READ' ? 'true' : st.filter ==='UNREAD' ? 'false' : '',
+            is_completed: st.filter === 'COMPLETE' ? 'true' : '',
         }
-
+        console.log(params)
         API.getOrders({params})
             .then(response => { 
                 this.responseGetItems(response) 
@@ -155,15 +158,29 @@ class Products extends Component {
         //     ...this.prevColumn,
         // ]
         const messages = st.data.map((message)=> 
-            <div key={message.id} style={{marginBottom: '10px', borderBottom: '1px solid rgb(150,150,150,0.5)'}}>
-                <div style={{marginBottom: '2px', fontSize: '18px', fontWeight: '700'}}>{message.first_name} {message.last_name}</div>
-                <div>{message.message}</div>
+            <div key={message.id} style={{marginBottom: '10px', borderBottom: '1px solid rgb(150,150,150,0.5)', cursor: 'pointer'}} onClick={()=>this.props.history.push(`order/${message.id}`)}>
+                <div style={message.is_read ? {marginBottom: '2px'} : {marginBottom: '2px', fontSize: '18px', fontWeight: '700'}}>
+                    {message.is_read ? '' : <span style={{fontWeight: '400', fontSize: '14px', color: 'red'}}>*</span>} 
+                    {message.first_name} {message.last_name} 
+                    {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(message.create).format('MMM DD YYYY')})</span>}
+                </div>
+                <div style={message.is_read ? {} : {fontSize: '16px', fontWeight: '700'}}>- {message.message}</div>
             </div>)
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <div className="pad-md">
                     <Row>
                         <Col className="margin-bottom-md">
+                            <div style={{marginBottom: '10px', position: 'relative'}}>
+                                <span style={{position: 'absolute', bottom: '0'}}>Filter by:</span> 
+                                <Input style={{maxWidth: '150px', marginLeft: '70px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
+                                    <option>All</option>
+                                    <option>UNREAD</option>
+                                    <option>READ</option>
+                                    <option>COMPLETE</option>
+                                </Input>
+                            </div>
+                            <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
                             {/* <Row>
                                 <Col md="3" className="margin-bottom-sm"  style={{marginBottom: '10px'}}>
                                     <SearchBar
