@@ -162,7 +162,7 @@ class Products extends Component {
                 <div style={message.is_read ? {marginBottom: '2px'} : {marginBottom: '2px', fontSize: '18px', fontWeight: '700'}}>
                     {message.is_read ? '' : <span style={{fontWeight: '400', fontSize: '14px', color: 'red'}}>*</span>} 
                     {message.first_name} {message.last_name} 
-                    {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(message.create).format('MMM DD YYYY')})</span>}
+                    {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(message.created).format('MMM DD YYYY')})</span>}
                 </div>
                 <div style={message.is_read ? {} : {fontSize: '16px', fontWeight: '700'}}>- {message.message}</div>
             </div>)

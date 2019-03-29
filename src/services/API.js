@@ -226,6 +226,39 @@ export const getReports = () => {
   return queryService(config)
 }
 
+export const getAnnualReport = () => {
+  // const config={}
+  // config.method = 'GET'
+  // config.route = `/annual/reports`
+  // return queryService(config)
+  return fetch(`${api}/annual/reports`, {
+    method: 'GET',
+    headers: {
+      'Authorization': Session.getToken(),
+    },
+  })
+  .then(res => {
+    if (res.ok)
+      return res ? res.json() : {}
+      else
+      throw(res.json());
+    }
+  )
+  .catch( (err={}) => {
+    if (err.then)
+      return err.then(function(data) {
+          throw(data);
+      })
+    else {
+        throw(
+          {
+              message: 'Error in Connection'
+          }
+        )
+    }
+  })
+}
+
 export const getReport = (params, id) => {
   const config={}
   config.method = 'GET'
@@ -235,11 +268,37 @@ export const getReport = (params, id) => {
 }
 
 export const getAverageReports = (params={}) => {
-  const config={}
-  config.method = 'GET'
-  config.route = `/average/reports`
-  config.params = params
-  return queryService(config)
+  // const config={}
+  // config.method = 'GET'
+  // config.route = `/average/reports`
+  // config.params = params
+  // return queryService(config)
+  return fetch(`${api}/average/reports`, {
+    method: 'GET',
+    headers: {
+      'Authorization': Session.getToken(),
+    },
+  })
+  .then(res => {
+    if (res.ok)
+      return res ? res.json() : {}
+      else
+      throw(res.json());
+    }
+  )
+  .catch( (err={}) => {
+    if (err.then)
+      return err.then(function(data) {
+          throw(data);
+      })
+    else {
+        throw(
+          {
+              message: 'Error in Connection'
+          }
+        )
+    }
+  })
 }
 
 export const resetPassword = (body,token,id) =>

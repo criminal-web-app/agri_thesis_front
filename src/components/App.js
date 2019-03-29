@@ -3,6 +3,7 @@ import { Switch, Route, withRouter } from 'react-router-dom'
 
 import Login from './Login'
 import Main from './Main';
+import PrintReport from './PrintReport';
 
 import * as Session from '../services/session'
 
@@ -57,6 +58,9 @@ class App extends Component {
     return (
       <div style={{background:'#fff'}}>
         <Switch>
+          <Route path="/report/print/:id" render={()=>
+            <PrintReport />
+          }/>
           <Route path="/"  render={() => (
             <Main />
           )}/>

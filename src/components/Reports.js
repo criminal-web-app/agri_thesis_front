@@ -32,6 +32,8 @@ class Reports extends Component {
     fetchData = (id,is_average=false) => {
         if(id){
             this.getReport(id)
+        } else if(this.props.apiRoute==='getAnnualReport'){
+            this.getAnnual()
         } else {
             this.getAverage()
         }
@@ -49,6 +51,19 @@ class Reports extends Component {
         API.getReport(params,id)
         .then((response)=>{
             this.setState({report: response.data})
+        }, err => {
+            TOAST.pop({message: err.message, type: 'error'})
+        }).finally(()=> 
+            this.setState({isLoading: false})
+        )
+    }
+
+    getAnnual = () => {
+        const st = this.state
+        this.setState({isLoading: true})
+        API.getAnnualReport()
+        .then((response)=>{
+            this.setState({annual_report: response.data})
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
         }).finally(()=> 
@@ -107,10 +122,13 @@ class Reports extends Component {
 
     componentWillReceiveProps = (newProps) => {
         const {id} = newProps.match.params
+        console.log(newProps)
         this.setState({isLoading: true})
         if(!id) {
             this.getAverage()
-        } else {
+        } else if(newProps.location.pathname==='report/annual') {
+            this.getAnnual()
+        } else{
             this.getReport(id)
         }
     }
@@ -141,11 +159,15 @@ class Reports extends Component {
         const startDate = gDp(st.pageState,'start_date') ? moment(gDp(st.pageState,'start_date'),DATE.DATE_DASH) : ''
         const endDate = gDp(st.pageState,'end_date') ? moment(gDp(st.pageState,'end_date'),DATE.DATE_DASH) : ''
         const emptyDateCond = startDate==='' && endDate ===''
-
+        const is_annual = !!this.props.apiRoute
         const reports = [
-            <Button color={!id ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+            <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
                 onClick={()=>pr.history.push(`/reports`)}>
                 Average Report
+            </Button>,
+            <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                onClick={()=>pr.history.push(`/report/annual`)}>
+                Annual Report
             </Button>
         ]
         st.data.map((report, pos)=> 
@@ -181,6 +203,9 @@ class Reports extends Component {
                 name: 8, fw: st.report[0].fw8, bw: st.report[0].bw8
             },
         ] : ''
+
+        const params = st.pageState.start_date ? `?start_date=${st.pageState.start_date}&end_date=${st.pageState.end_date}` : ''
+        console.log(st.annual_report)
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <Row>
@@ -189,11 +214,10 @@ class Reports extends Component {
                     </Col>
                     <Col sm="12" md="9">
                         <Row>
-                            <Col sm="12" md="3" style={{padding: '0', marginBottom: '10px'}}>
+                            <Col sm="12" md="4" lg="3" style={{padding: '0', marginBottom: '10px'}}>
                                 <div>
-                                    <div className="react-date-range-picker input-sip">
+                                    <div className="react-date-range-picker">
                                         <DateRangePicker
-                                            className="input-sip"
                                             // opens="left"
                                             {...(startDate) ? {startDate} : {}}
                                             {...(endDate) ? {endDate} : {}}
@@ -222,7 +246,7 @@ class Reports extends Component {
                                                 </Button>
                                             </div>
                                         </DateRangePicker>
-                                        <Button style={{top:'-2px'}} size="sm" className="form-control-sm-font-size remove" color="link" onClick={(e)=>{
+                                        <Button style={{top:'-2px', right:'5px'}} size="sm" className="form-control-sm-font-size remove" color="link" onClick={(e)=>{
                                             this.setState({
                                                 pageState: {
                                                     start_date: '',end_date: ''
@@ -236,14 +260,40 @@ class Reports extends Component {
                                     </div>
                                 </div>
                             </Col>
+                            <Col align="right" style={{paddingRight: '0'}}>
+                                <Button style={{padding: '0 30px'}} onClick={()=>window.open(`/report/print/${id? id: pr.apiRoute? 'annual': 'average'}${params}`)}>
+                                    Print Report
+                                </Button>
+                            </Col>
                         </Row>
+                        {is_annual ? 
+                        <ResponsiveContainer>
+                            <BarChart
+                                // width={800}
+                                // height={300}
+                                data={st.annual_report}
+                                margin={{
+                                top: 30, right: 15, left: 5, bottom: 15,
+                                }}
+                            >
+                                <XAxis dataKey="Month" tickSize
+                                    dy='25'/>
+                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="avg_fw" fill="#8884d8"></Bar>
+                                <Bar dataKey="avg_bw" fill="#82ca9d"/>
+                            </BarChart>
+                        </ResponsiveContainer>:
+
                         <ResponsiveContainer>
                             <BarChart
                                 // width={800}
                                 // height={300}
                                 data={data}
                                 margin={{
-                                top: 30, right: 5, left: 5, bottom: 5,
+                                top: 30, right: 15, left: 5, bottom: 15,
                                 }}
                             >
                                 <XAxis dataKey="name" tickSize
@@ -256,6 +306,7 @@ class Reports extends Component {
                                 <Bar dataKey="bw" fill="#82ca9d"/>
                             </BarChart>
                         </ResponsiveContainer>
+                        }
                     </Col>
                 </Row>
                 

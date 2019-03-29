@@ -32,7 +32,7 @@ class Main extends Component {
         return (
             <div>
                 <Header has_token={has_token}/>
-                <div style={{ display: "block", background: 'rgb(242, 241, 201)', paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
+                <div style={{ display: "block", background: 'white', paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
                     <Switch>
                         <Route exact path="/" render={()=>(
                             <Home/>
@@ -57,6 +57,9 @@ class Main extends Component {
                         )}/>}
                         {has_token && <Route exact path="/user/update/:id" render={()=>(
                             <UserAddEdit method="Update" />
+                        )}/>}
+                        {has_token && <Route exact path="/report/annual" render={()=>(
+                            <Reports apiRoute="getAnnualReport"/>
                         )}/>}
                         {has_token && <Route exact path="/reports" render={()=>(
                             <Reports/>
