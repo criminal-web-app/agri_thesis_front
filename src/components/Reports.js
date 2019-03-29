@@ -261,7 +261,7 @@ class Reports extends Component {
                                 </div>
                             </Col>
                             <Col align="right" style={{paddingRight: '0'}}>
-                                <Button style={{padding: '0 30px'}} onClick={()=>window.open(`/report/print/${id? id: pr.apiRoute? 'annual': 'average'}${params}`)}>
+                                <Button color="success" style={{padding: '0 30px'}} onClick={()=>window.open(`/report/print/${id? id: pr.apiRoute? 'annual': 'average'}${params}`)}>
                                     Print Report
                                 </Button>
                             </Col>
