@@ -91,19 +91,20 @@ class OrderDetails extends Component {
                     </label>
                     <Row>
                         <Col className="margin-bottom-md">
-                            <div  style={{marginBottom: '10px', borderBottom: '1px solid rgb(150,150,150,0.5)'}}>
+                            <div style={{ padding: '10px', border: '2px solid #014401', borderRadius: '5px', background: 'white', marginBottom: '10px',}}>
                                 <div style={{marginBottom: '2px', fontSize: '18px', fontWeight: '700'}}>
                                     {gDp(data,'first_name', '')} {gDp(data,'last_name','')}
                                     {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(data.create).format('MMM DD YYYY')})</span>}
                                 </div>
                                 <div>{`<${gDp(data,'email','')}>`}</div>
                                 <div style={{marginTop: '20px'}}>{gDp(data,'message','')}</div>
+                                <br/>
+                                <Button name="complete_order" color="primary" onClick={()=>this.completeOrder()}>Complete Order</Button>
                             </div>
                         </Col>
                     </Row>
                     <br/>
                     <Row>
-                        <Button name="complete_order" color="primary" onClick={()=>this.completeOrder()}>Complete Order</Button>
                     </Row>
                 </div>
                 <Loader

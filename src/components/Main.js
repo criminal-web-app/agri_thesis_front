@@ -14,7 +14,8 @@ import ProductAddEdit from './products/ProductAddEdit'
 import UserAddEdit from './users/UserAddEdit'
 
 import OrderDetails from './OrderDetails'
-
+// import { url } from 'inspector';
+import background from '../pic/bg.jpg';
 class Main extends Component {
     state = {
         menuexpand: true,
@@ -30,9 +31,9 @@ class Main extends Component {
         //     // return <Redirect to="/"/>
         // }
         return (
-            <div>
+            <div style={{background: `url(${background}) no-repeat`, backgroundSize: 'cover', minHeight: '100vh'}}>
                 <Header has_token={has_token}/>
-                <div style={{ display: "block", background: 'white', paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
+                <div style={{ display: "block", paddingTop: '15px' }} className={menuexpand ? 'content onexpand' : 'content'}> {/*Session.getRole() ? "block" : "none"*/}
                     <Switch>
                         <Route exact path="/" render={()=>(
                             <Home/>

@@ -19,31 +19,19 @@ class SearchBar extends Component {
                         (document.getElementsByClassName('rt-tbody')[0] || {}).scrollTop = 0
                         didSearch(e)
                     }}>
-                    <InputGroup>
+                    <InputGroup style={{position: 'relative'}}>
                         <Input 
-                            className={`form-control-sm-font-size ${className}`}
+                            className={`form-control-sm-font-size search-bar ${className}`}
                             name="key"
                             type="text"
                             value={query}
                             onChange={(e) => {
                                 onChangeQuery(e)
                             }}
-                            placeholder={placeholder}/>
-                        <InputGroupAddon addonType="append">
-                            <Button
-                                className="form-control-sm-font-size"
-                                disabled={loading}
-                                color="primary"
-                                >
-                            {!loading && (<span>Search</span>)}
-                            {loading && (
-                                <SyncLoader
-                                    size={4}
-                                    loading={loading}>
-                                </SyncLoader>
-                            )}
-                            </Button>
-                        </InputGroupAddon>
+                            style={{borderRadius: '5px', textIndent: '20px', color: '#014401'}}
+                            placeholder={placeholder}>
+                            </Input>
+                                <div style={{position:'absolute', left: '10px', top: '5px',zIndex: '99999999'}}><FaSearch /></div>
                     </InputGroup>
                 </Form>
             </div>

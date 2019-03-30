@@ -71,17 +71,20 @@ class Home extends Component {
         //     }
         // ];
         const product = this.state.products.map((product)=>
-            <Col key={product.id} md="6" sm="12" style={{padding: '10px'}}>
-                <td>
-                    <img src={product.file} alt="No photo available" style={{height: '150px', width: '150px'}}></img>
-                </td>
-                <td style={{paddingLeft: '30px'}}>
-                    <div>
-                        <h6>{product.name}</h6>
-                        <div style={{color:'gray'}}>{product.description}</div>
-                        <div>Price: {Helpers.currency(product.price)}</div>
-                    </div>
-                </td>
+            <Col key={product.id} md="6" sm="12"  style={{marginBottom: '10px'}}>
+                <div md="12" style={{padding: '10px', border: '2px solid #014401',
+                                                            borderRadius: '5px', background: 'white' }}>
+                    <td style={{width: '150px', height: '150px', background: 'white'}}>
+                        <img src={product.file} alt="No photo available" style={{height: '150px', width: '150px'}}></img>
+                    </td>
+                    <td style={{paddingLeft: '30px', verticalAlign: 'top'}}>
+                        <div style={{color: '#014401'}}>
+                            <h6>{product.name}</h6>
+                            <div style={{fontSize: '12px', paddingLeft: '10px', lineHeight:'1'}}>Price: {Helpers.currency(product.price)}</div>
+                            <div style={{paddingLeft: '5px'}}>{product.description}</div>
+                        </div>
+                    </td>
+                </div>
             </Col>
         )
         const activities = st.activities.map((activity)=> {

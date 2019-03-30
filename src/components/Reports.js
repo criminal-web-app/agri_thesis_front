@@ -15,6 +15,19 @@ import {
 import {FaCalendar} from 'react-icons/fa/'
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
+var month = new Array();
+month[0] = "January";
+month[1] = "February";
+month[2] = "March";
+month[3] = "April";
+month[4] = "May";
+month[5] = "June";
+month[6] = "July";
+month[7] = "August";
+month[8] = "September";
+month[9] = "October";
+month[10] = "November";
+month[11] = "December";
 const qs = require('query-string');
 class Reports extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
@@ -23,6 +36,7 @@ class Reports extends Component {
         report:[],
         isLoading: true,
         average_report: [],
+        report_name: '',
         pageState: {
             start_date: this.urlSearch.start_date,
             end_date: this.urlSearch.end_date
@@ -52,7 +66,7 @@ class Reports extends Component {
         .then((response)=>{
             this.setState({report: response.data})
         }, err => {
-            TOAST.pop({message: err.message, type: 'error'})
+            TOAST.pop({report: [], message: err.message, type: 'error'})
         }).finally(()=> 
             this.setState({isLoading: false})
         )
@@ -63,9 +77,10 @@ class Reports extends Component {
         this.setState({isLoading: true})
         API.getAnnualReport()
         .then((response)=>{
-            this.setState({annual_report: response.data})
+            const report = response.data.map((months)=> {return {...months, Month: month[months.Month-1]}})
+            this.setState({annual_report: report})
         }, err => {
-            TOAST.pop({message: err.message, type: 'error'})
+            TOAST.pop({annual_report:[], message: err.message, type: 'error'})
         }).finally(()=> 
             this.setState({isLoading: false})
         )
@@ -78,8 +93,8 @@ class Reports extends Component {
             start_date: st.pageState.start_date || '',
             end_date: st.pageState.end_date || ''
         }
-        !st.pageState.start_date && delete params.start_date
-        !st.pageState.end_date && delete params.end_date
+        // !st.pageState.start_date && delete params.start_date
+        // !st.pageState.end_date && delete params.end_date
         API.getAverageReports(params)
         .then((response)=>{
             const report = [{...response.data,
@@ -94,7 +109,7 @@ class Reports extends Component {
             }]
             this.setState({report: report})
         }, err => {
-            TOAST.pop({message: err.message, type: 'error'})
+            TOAST.pop({report: [],message: err.message, type: 'error'})
         }).finally(()=> 
             this.setState({isLoading: false})
         )
@@ -124,9 +139,9 @@ class Reports extends Component {
         const {id} = newProps.match.params
         console.log(newProps)
         this.setState({isLoading: true})
-        if(!id) {
+        if(newProps.location.pathname==='/reports') {
             this.getAverage()
-        } else if(newProps.location.pathname==='report/annual') {
+        } else if(newProps.location.pathname==='/report/annual') {
             this.getAnnual()
         } else{
             this.getReport(id)
@@ -160,20 +175,24 @@ class Reports extends Component {
         const endDate = gDp(st.pageState,'end_date') ? moment(gDp(st.pageState,'end_date'),DATE.DATE_DASH) : ''
         const emptyDateCond = startDate==='' && endDate ===''
         const is_annual = !!this.props.apiRoute
+        const newParams = st.pageState.start_date ? `?start_date=${st.pageState.start_date}&end_date=${st.pageState.end_date}` : ''
         const reports = [
-            <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                onClick={()=>pr.history.push(`/reports`)}>
-                Average Report
-            </Button>,
             <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                onClick={()=>pr.history.push(`/report/annual`)}>
+                onClick={()=>pr.history.push(`/report/annual${newParams}`)}>
                 Annual Report
+            </Button>,
+            <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                onClick={()=>pr.history.push(`/reports${newParams}`)}>
+                Average Report
             </Button>
         ]
         st.data.map((report, pos)=> 
             reports.push(
             <Button key={report.id} color={id===report.activity_id ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                onClick={()=>pr.history.push(`/report/${report.activity_id}`)}>
+                onClick={()=>{
+                    console.log(report)
+                    this.setState({report_name: report.name})
+                    pr.history.push(`/report/${report.activity_id}${newParams}`)}}>
                 {report.name}
             </Button>
         ))
@@ -206,10 +225,14 @@ class Reports extends Component {
 
         const params = st.pageState.start_date ? `?start_date=${st.pageState.start_date}&end_date=${st.pageState.end_date}` : ''
         console.log(st.annual_report)
+        const report_name = pr.location.pathname==='/reports' ? 'Average' :
+                            pr.location.pathname==='/report/annual' ? 'Annual' : 
+                            st.report_name
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <Row>
-                    <Col sm="12" md="3" style={{overflowY:'auto', marginBottom: '10px'}} className="report-buttons">
+                    <Col sm="12" md="3" style={{overflowY:'auto', background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', paddingTop: '10px'}} className="report-buttons">
+                        <div>Select Report: </div>
                         {reports}
                     </Col>
                     <Col sm="12" md="9">
@@ -238,7 +261,7 @@ class Reports extends Component {
                                                         ) :
                                                         (
                                                             <span>
-                                                                <span>{`${startDate.format("MM/DD/YYYY")} - ${endDate.format("MM/DD/YYYY")}`}</span>
+                                                                <span>{`${startDate.format("MMMM")}`}</span>
                                                             </span>
 
                                                         )
@@ -266,6 +289,7 @@ class Reports extends Component {
                                 </Button>
                             </Col>
                         </Row>
+                        {report_name}
                         {is_annual ? 
                         <ResponsiveContainer>
                             <BarChart
@@ -282,8 +306,8 @@ class Reports extends Component {
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="avg_fw" fill="#8884d8"></Bar>
-                                <Bar dataKey="avg_bw" fill="#82ca9d"/>
+                                <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
+                                <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
                             </BarChart>
                         </ResponsiveContainer>:
 
@@ -302,8 +326,8 @@ class Reports extends Component {
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="fw" fill="#8884d8"></Bar>
-                                <Bar dataKey="bw" fill="#82ca9d"/>
+                                <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
+                                <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
                             </BarChart>
                         </ResponsiveContainer>
                         }

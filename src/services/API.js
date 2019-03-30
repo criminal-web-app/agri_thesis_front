@@ -268,11 +268,11 @@ export const getReport = (params, id) => {
 }
 
 export const getAverageReports = (params={}) => {
-  // const config={}
-  // config.method = 'GET'
-  // config.route = `/average/reports`
-  // config.params = params
-  // return queryService(config)
+  const config={}
+  config.method = 'GET'
+  config.route = `/average/reports`
+  config.params = params
+  return queryService(config)
   return fetch(`${api}/average/reports`, {
     method: 'GET',
     headers: {

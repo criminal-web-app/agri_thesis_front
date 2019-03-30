@@ -247,14 +247,6 @@ class Users extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
-                                    <div className="text-left text-lg-right text-md-right">
-                                        <strong>Total: </strong>
-                                        { st.searchLoading ? '...' : (st.total || 0)} 
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
                                 <Col className="user">
                                     <ReactTable
                                         {...{

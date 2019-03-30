@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 class About extends Component {
     render() {
         return(
-            <div style={{margin: '0px 5%'}}> 
+            <div style={{margin: '0px 5%', background: 'white'}}> 
                 <h5>HISTORY</h5>
                 <p>
                     The National Institute of Molecular Biology and Biotechnology (BIOTECH) , 

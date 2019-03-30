@@ -282,7 +282,7 @@ class UserAddEdit extends Component {
         }, {})
         return(
             <Row >
-                <Col lg="6" md="9" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
+                <Col lg="6" md="9" sm="11" xs="11" style={{background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', padding: '20px', margin: 'auto'}}>
                     <div > 
                         <h4 style={{textAlign: 'center'}}>{method} User!</h4>
                         <AvForm onValidSubmit={this.handleSubmit} ref={c => (this.form = c)}> 

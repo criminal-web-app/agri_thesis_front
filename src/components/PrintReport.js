@@ -179,8 +179,8 @@ class PrintReport extends Component {
                             <CartesianGrid strokeDasharray="3 3" />
                             {/* <Tooltip /> */}
                             <Legend />
-                            <Bar dataKey="avg_fw" fill="#8884d8"></Bar>
-                            <Bar dataKey="avg_bw" fill="#82ca9d"/>
+                            <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
+                            <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
                         </BarChart>
                     </ResponsiveContainer>:
                     <ResponsiveContainer>
@@ -198,8 +198,8 @@ class PrintReport extends Component {
                             <CartesianGrid strokeDasharray="3 3" />
                             {/* <Tooltip /> */}
                             <Legend />
-                            <Bar dataKey="fw" fill="#8884d8"></Bar>
-                            <Bar dataKey="bw" fill="#82ca9d"/>
+                            <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
+                            <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
                         </BarChart>
                     </ResponsiveContainer>
                 }

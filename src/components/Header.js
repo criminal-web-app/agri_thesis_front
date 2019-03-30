@@ -12,10 +12,24 @@ import ConfirmModal from '../modals/ConfirmModal'
 import * as Session from '../services/session'
 import {FaCaretLeft, FaCaretDown } from 'react-icons/fa/'
 
+import moment from 'moment';
+
 import logo from './Bio-N.ico'
 
 const qs = require('query-string');
-
+var month = new Array();
+month[0] = "January";
+month[1] = "February";
+month[2] = "March";
+month[3] = "April";
+month[4] = "May";
+month[5] = "June";
+month[6] = "July";
+month[7] = "August";
+month[8] = "September";
+month[9] = "October";
+month[10] = "November";
+month[11] = "December";
 class Header extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
@@ -87,9 +101,16 @@ class Header extends Component {
         const st=this.state;
         const user = Session.getUser()
         const has_token = this.state.has_token || Session.getToken() || user
+        const date = new Date()
+        const year = date.getFullYear()
+        const month = date.getMonth()
+        const lastDay = moment(new Date(date.getFullYear(), date.getMonth() + 1, 0)).format('DD');
+        const reportStartQuery = moment(date.getMonth())
+        console.log(month, year)
+        // console.log(reportStartQuery)
         return(
             <div className="header"> 
-                <Row style={{background: 'rgb(87, 122, 4)', margin: 'auto'}}>
+                <Row style={{background: '#049372', margin: 'auto'}}>
                     <Col>
                         <Navbar>
                             <NavLink className="headerNav" exact to="/" activeStyle={{textDecoration: 'underline'}}><img src={logo} alt="logo" style={{height: '24px', width: '24px'}}></img>BIO-N</NavLink>
@@ -98,7 +119,7 @@ class Header extends Component {
                             <NavLink className="headerNav" to="/products" activeStyle={{textDecoration: 'underline'}}>Products</NavLink>  
                             {has_token && <NavLink className="headerNav" to="/users" activeStyle={{textDecoration: 'underline'}}>Users</NavLink> }
                             {has_token && <NavLink className="headerNav" to="/orders" activeStyle={{textDecoration: 'underline'}}>Orders</NavLink> }
-                            {has_token && <NavLink className="headerNav" to="/reports" activeStyle={{textDecoration: 'underline'}}>Reports</NavLink> }
+                            {has_token && <NavLink className="headerNav" to={`/report/annual?start_date=${year}-${month}-01&end_date=${year}-${month}-${lastDay}`} activeStyle={{textDecoration: 'underline'}}>Reports</NavLink> }
                                 <Nav className="ml-auto" navbar>
                                         <Dropdown isOpen={this.state.dropdownOpen} toggle={()=>this.toggle()}>
                                             <DropdownToggle style={{padding: '1px 6px', background: 'transparent', border: 'none'}}>
@@ -122,7 +143,7 @@ class Header extends Component {
                     disabledConfirmFocus={true}
                     modalBody={  
                         <div>
-                            <div align="center" className="margin-bottom-md" >
+                            <div align="center" className="margin-bottom-md" style={{marginBottom: '5px'}} >
                                 <Input type="password" className="form-control-sm-font-size mtop-sm-10" value={st.password||''} 
                                     placeholder="Password"
                                     onChange={(e)=>{

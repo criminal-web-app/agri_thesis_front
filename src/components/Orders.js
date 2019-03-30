@@ -11,6 +11,7 @@ import { Helpers, lS, DefaultState, TOAST, OPTIONS, gDp, DATE_FORMAT  } from '..
 import SearchBar from './SearchBar.js'
 import ConfirmModal from '../modals/ConfirmModal'
 
+import background from '../pic/photo.jpg';
 import {FaTrashAlt, FaEdit} from 'react-icons/fa/'
 import Loader from './Loader'
 const moment = require('moment');
@@ -90,7 +91,7 @@ class Products extends Component {
             sort_desc: (!st.pageState.sort_id) ? '' :
                        (st.pageState.sort_desc || '').toString() === 'true' ? st.pageState.sort_desc : 'desc',
             is_read: st.filter === 'READ' ? 'true' : st.filter ==='UNREAD' ? 'false' : '',
-            is_completed: st.filter === 'COMPLETE' ? 'true' : '',
+            is_completed: st.filter === 'COMPLETE' ? 'true' : st.filter === 'INCOMPLETE' ? 'false': '',
         }
         console.log(params)
         API.getOrders({params})
@@ -157,8 +158,8 @@ class Products extends Component {
         // st.columns = [
         //     ...this.prevColumn,
         // ]
-        const messages = st.data.map((message)=> 
-            <div key={message.id} style={{marginBottom: '10px', borderBottom: '1px solid rgb(150,150,150,0.5)', cursor: 'pointer'}} onClick={()=>this.props.history.push(`order/${message.id}`)}>
+        const messages = st.data.map((message, index)=> 
+            <div key={index} style={{ background: 'white', padding: '10px', border: '2px solid #014401', borderRadius: '5px', marginBottom: '10px', cursor: 'pointer'}} onClick={()=>this.props.history.push(`order/${message.id}`)}>
                 <div style={message.is_read ? {marginBottom: '2px'} : {marginBottom: '2px', fontSize: '18px', fontWeight: '700'}}>
                     {message.is_read ? '' : <span style={{fontWeight: '400', fontSize: '14px', color: 'red'}}>*</span>} 
                     {message.first_name} {message.last_name} 
@@ -172,44 +173,17 @@ class Products extends Component {
                     <Row>
                         <Col className="margin-bottom-md">
                             <div style={{marginBottom: '10px', position: 'relative'}}>
-                                <span style={{position: 'absolute', bottom: '0'}}>Filter by:</span> 
-                                <Input style={{maxWidth: '150px', marginLeft: '70px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
+                                <span style={{position: 'absolute', bottom: '5px'}}>Filter by:</span> 
+                                <Input style={{maxWidth: '150px', marginLeft: '70px', padding: '5px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
                                     <option>All</option>
                                     <option>UNREAD</option>
+                                    <option>INCOMPLETE</option>
                                     <option>READ</option>
                                     <option>COMPLETE</option>
                                 </Input>
                             </div>
                             <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
-                            {/* <Row>
-                                <Col md="3" className="margin-bottom-sm"  style={{marginBottom: '10px'}}>
-                                    <SearchBar
-                                        query={st.query}
-                                        placeholder={'Search Order'}
-                                        loading={st.searchLoading}
-                                        didSearch={this.handleSearch}
-                                        onChangeQuery={(e) => {this.setState({query: e.target.value})}}
-                                    />  
-                                </Col>
-                            </Row> */}
                             {messages}
-                            {/* <Row>
-                                <Col>
-                                    <div className="text-left text-lg-right text-md-right">
-                                        <strong>Total: </strong>
-                                        { st.searchLoading ? '...' : (st.total || 0)} 
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="user">
-                                    <ReactTable
-                                        {...{
-                                            ...Helpers.reactTableDefault({st, that: that}),
-                                        }}
-                                    />
-                                </Col>
-                            </Row> */}
                         </Col>
                     </Row>
                     <ConfirmModal

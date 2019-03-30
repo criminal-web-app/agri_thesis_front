@@ -35,7 +35,7 @@ class Products extends Component {
                 Header: "Pictures",
                 headerClassName: 'text-left',
                 accessor: "file",
-                width: 250,
+                width: 230,
                 Cell: row=> {
                     return <img src={row.value} alt="No photo available" style={{height: '150px', width: '150px'}}></img>
                 }
@@ -48,10 +48,10 @@ class Products extends Component {
                     const {original} = row
 
                     const description = 
-                        <div>
+                        <div style={{color: '#014401'}}>
                             <h6>{original.name}</h6>
-                            <div style={{color:'gray'}}>{original.description}</div>
-                            <div>Price: {Helpers.currency(original.price)}</div>
+                            <div style={{fontSize: '12px', paddingLeft: '10px', lineHeight:'1'}}>Price: {Helpers.currency(original.price)}</div>
+                            <div style={{paddingLeft: '5px'}}>{original.description}</div>
                         </div>
 
                     return description
@@ -219,7 +219,7 @@ class Products extends Component {
                                 <Col md="3" style={{marginBottom: '10px'}}>
                                     <SearchBar
                                         query={st.query}
-                                        placeholder={'Search Products'}
+                                        placeholder={'Enter product name'}
                                         loading={st.searchLoading}
                                         didSearch={this.handleSearch}
                                         onChangeQuery={(e) => {this.setState({query: e.target.value})}}
@@ -230,14 +230,6 @@ class Products extends Component {
                                         Add Product
                                     </Button>
                                 </Col>}
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <div className="text-left text-lg-right text-md-right">
-                                        <strong>Total: </strong>
-                                        { st.searchLoading ? '...' : (st.total || 0)} 
-                                    </div>
-                                </Col>
                             </Row>
                             <Row>
                                 <Col>

@@ -1,7 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  background: white;
+  background: #049372;
+  background-size: 100%;
+  color: #014401 !important;
   font-family: 'Open Sans',Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -12,8 +14,16 @@ code {
     monospace;
 }
 
-h4, h5,h6 {
-  color: orangered;
+h4, h5 {
+  color: #014401;
+  font-weight: bold;
+  
+}
+
+h6 {
+  color: #014401;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .headerNav{
@@ -23,6 +33,16 @@ h4, h5,h6 {
 .navbar-nav{
   flex-direction: row;
   padding: 0px 0px;
+}
+
+.navbar{
+  font-family: "Montserrat",sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: normal;
 }
 
 .headerNav{
@@ -48,8 +68,9 @@ h4, h5,h6 {
   padding-right:5px!important;
 }
 
-.user .ReactTable .rt-tbody .rt-td {
-  align-self: center;
+.user .ReactTable .rt-tbody .rt-td,
+.user .ReactTable .rt-resizable-header-content {
+  align-self: center; 
   text-align: center;
 }
 
@@ -58,7 +79,7 @@ h4, h5,h6 {
 }
 
 .rt-resizable-header-content{
-  text-align: center;
+  /* text-align: center; */
 }
 
 .dropdown-menu{
@@ -70,7 +91,7 @@ h4, h5,h6 {
 }
 
 .ReactTable.hideHeader .rt-tbody .rt-td{
-  align-self: center
+  /* align-self: center */
 }
 
 .ReactTable.hideHeader{
@@ -82,7 +103,7 @@ h4, h5,h6 {
 }
 
 .carousel-caption{
-  color: black;
+  color: white;
 }
 
 .recharts-responsive-container {
@@ -155,4 +176,35 @@ h4, h5,h6 {
 
 .-pagination{
   background: #fff;
+}
+
+.ReactTable{
+  background: transparent !important;
+}
+
+.ReactTable .rt-tr{
+  border: 2px solid #014401;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  background: white !important;
+}
+
+.ReactTable .rt-td{
+  white-space: normal;
+}
+
+.user .ReactTable .rt-td{
+  white-space: pre-wrap;
+  align-self: center;
+}
+
+.search-bar::placeholder { 
+  color: #d87001;
+  font-size: 14px;
+  vertical-align: middle;
+  margin-top: -5px;
+}
+
+.col{
+  flex:1;
 }
