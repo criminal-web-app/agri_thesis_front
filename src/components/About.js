@@ -4,9 +4,9 @@ import { withRouter } from 'react-router-dom'
 class About extends Component {
     render() {
         return(
-            <div style={{margin: '0px 5%', background: 'white'}}> 
+            <div style={{margin: '0px 5%', padding: '10px', background: 'white'}}> 
                 <h5>HISTORY</h5>
-                <p>
+                <p style={{paddingLeft: "30px"}}>
                     The National Institute of Molecular Biology and Biotechnology (BIOTECH) , 
                     formerly known as the National Institutes of Biotechnology and Applied Microbiology, 
                     was established on December 20, 1979 by the UP Board of Regents as a research and development institution
@@ -16,7 +16,7 @@ class About extends Component {
                     various departments and disciplines in engineering, chemistry and applied microbiology for research, 
                     training, and extension.
                 </p>
-                <p>
+                <p style={{paddingLeft: "30px"}}>
                     BIOTECH serves as the national research and development (R&D) organization specializing in 
                     agricultural, environmental, food and feeds, and health biotechnology. The institute capitalizes on 
                     the use of the country's diverse collection of microorganisms, rich natural resources and 
@@ -26,7 +26,7 @@ class About extends Component {
                 <br></br>
 
                 <h5>VISION</h5>
-                <p>
+                <p style={{paddingLeft: "30px"}}>
                     BIOTECH as a premier R & D institution for basic and applied researches on molecular biology and 
                     biotechnology addressing the needs related to agriculture, forestry, environment, energy and industry 
                     that will have positive impact to society.
@@ -34,14 +34,14 @@ class About extends Component {
                 <br></br>
                 
                 <h5>MISSION</h5>
-                <p>To develop cost-effective and environment-friendly technologies for the production of goods and services 
+                <p style={{paddingLeft: "30px"}}>To develop cost-effective and environment-friendly technologies for the production of goods and services 
                     that are comparable or better alternatives to conventional products for their use in the following 
                     sectors: agriculture, forestry, environment, energy and industry.
                 </p>
                 <br></br>
 
                 <h5>GOALS</h5>
-                <ul>
+                <ul style={{marginLeft: "20px"}}>
                     <li>To contribute to increased productivity and global competitiveness of commodities through the creation of high-value products, processes and services;</li>
                     <li>To lead in the use, protection and conservation of biodiversity especially microbial resources;</li>
                     <li>To be at the forefront in waste management research through biotechnology;</li>
