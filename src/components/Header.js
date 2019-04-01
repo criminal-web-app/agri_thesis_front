@@ -103,7 +103,7 @@ class Header extends Component {
         const has_token = this.state.has_token || Session.getToken() || user
         const date = new Date()
         const year = date.getFullYear()
-        const month = date.getMonth()
+        const month = date.getMonth() +1
         const lastDay = moment(new Date(date.getFullYear(), date.getMonth() + 1, 0)).format('DD');
         const reportStartQuery = moment(date.getMonth())
         console.log(month, year)

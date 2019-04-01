@@ -96,7 +96,8 @@ class OrderDetails extends Component {
                                     {gDp(data,'first_name', '')} {gDp(data,'last_name','')}
                                     {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(data.create).format('MMM DD YYYY')})</span>}
                                 </div>
-                                <div>{`<${gDp(data,'email','')}>`}</div>
+                                <div style={{fontSize: '12px'}}>{`(${gDp(data,'phone_number','')})`}</div>
+                <div style={{borderBottom: '1px solid #014401', fontSize: '12px'}}>{`${gDp(data,'email','')}`}</div>
                                 <div style={{marginTop: '20px'}}>{gDp(data,'message','')}</div>
                                 <br/>
                                 <Button name="complete_order" color="primary" onClick={()=>this.completeOrder()}>Complete Order</Button>

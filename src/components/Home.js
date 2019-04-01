@@ -108,7 +108,7 @@ class Home extends Component {
                         {product}
                     </Row>
                     {st.products.length>0 && <div style={{float: 'right'}}>
-                        <NavLink to={'/products'}>See more...</NavLink>
+                        <NavLink to={'/products'} style={{color:'white'}}>See more...</NavLink>
                     </div>}
                 </div>
                 <br/>

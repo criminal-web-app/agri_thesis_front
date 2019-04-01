@@ -90,8 +90,8 @@ class Products extends Component {
             sort_id: st.pageState.sort_id || '',
             sort_desc: (!st.pageState.sort_id) ? '' :
                        (st.pageState.sort_desc || '').toString() === 'true' ? st.pageState.sort_desc : 'desc',
-            is_read: st.filter === 'READ' ? 'true' : st.filter ==='UNREAD' ? 'false' : '',
-            is_completed: st.filter === 'COMPLETE' ? 'true' : st.filter === 'INCOMPLETE' ? 'false': '',
+            is_read: st.filter === 'PENDING' ? 'false' : st.filter==='ALL' ? '' : 'true',
+            is_completed: st.filter === 'COMPLETED' ? 'true' : st.filter === 'PROCESSING' ? 'false': '',
         }
         console.log(params)
         API.getOrders({params})
@@ -165,6 +165,11 @@ class Products extends Component {
                     {message.first_name} {message.last_name} 
                     {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}> ({moment(message.created).format('MMM DD YYYY')})</span>}
                 </div>
+                <div style={{fontSize: '12px'}}>{`(${gDp(message,'phone_number','')})`}</div>
+                <div style={{borderBottom: '1px solid #014401', fontSize: '12px'}}>
+                    {`${gDp(message,'email','')}`}
+                    {<span style={{fontSize: '12px', color: 'gray', float: 'right'}}>Status: {!message.is_read ? 'Pending' : message.is_completed ? 'Completed' : 'Processing'}</span>}
+                </div>
                 <div style={message.is_read ? {} : {fontSize: '16px', fontWeight: '700'}}>- {message.message}</div>
             </div>)
         return (
@@ -173,13 +178,12 @@ class Products extends Component {
                     <Row>
                         <Col className="margin-bottom-md">
                             <div style={{marginBottom: '10px', position: 'relative'}}>
-                                <span style={{position: 'absolute', bottom: '5px'}}>Filter by:</span> 
+                                <span style={{position: 'absolute', bottom: '5px', color: 'white'}}>Filter by:</span> 
                                 <Input style={{maxWidth: '150px', marginLeft: '70px', padding: '5px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
-                                    <option>All</option>
-                                    <option>UNREAD</option>
-                                    <option>INCOMPLETE</option>
-                                    <option>READ</option>
-                                    <option>COMPLETE</option>
+                                    <option>ALL</option>
+                                    <option>PENDING</option>
+                                    <option>PROCESSING</option>
+                                    <option>COMPLETED</option>
                                 </Input>
                             </div>
                             <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
