@@ -176,16 +176,7 @@ class Reports extends Component {
         const emptyDateCond = startDate==='' && endDate ===''
         const is_annual = !!this.props.apiRoute
         const newParams = st.pageState.start_date ? `?start_date=${st.pageState.start_date}&end_date=${st.pageState.end_date}` : ''
-        const reports = [
-            <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                onClick={()=>pr.history.push(`/report/annual${newParams}`)}>
-                Annual Report
-            </Button>,
-            <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                onClick={()=>pr.history.push(`/reports${newParams}`)}>
-                Average Report
-            </Button>
-        ]
+        const reports = []
         st.data.map((report, pos)=> 
             reports.push(
             <Button key={report.id} color={id===report.activity_id ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
@@ -224,6 +215,15 @@ class Reports extends Component {
         ] : ''
 
         const params = st.pageState.start_date ? `?start_date=${st.pageState.start_date}&end_date=${st.pageState.end_date}` : ''
+        const date = new Date()
+        const year = date.getFullYear()
+        const Month = date.getMonth()
+        
+        let selections = {}
+        for(var a=0; a<=Month; a++){
+            const lastDay = moment(new Date(date.getFullYear(), month[a+1] , 0)).format('DD');
+            selections[month[a]] = [moment().startOf(month[a]), moment().endOf(month[a])]
+        }
         console.log(st.annual_report)
         const report_name = pr.location.pathname==='/reports' ? 'Average' :
                             pr.location.pathname==='/report/annual' ? 'Annual' : 
@@ -232,6 +232,14 @@ class Reports extends Component {
             <div style={{margin: '0 5% 15px'}}> 
                 <Row>
                     <Col sm="12" md="3" style={{overflowY:'auto', background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', paddingTop: '10px'}} className="report-buttons">
+                    <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                        onClick={()=>pr.history.push(`/report/annual${newParams}`)}>
+                        Annual Report
+                    </Button>
+                    <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                        onClick={()=>pr.history.push(`/reports${newParams}`)}>
+                        Average Report
+                    </Button>
                         <div>Select Report: </div>
                         {reports}
                     </Col>
@@ -244,10 +252,7 @@ class Reports extends Component {
                                             // opens="left"
                                             {...(startDate) ? {startDate} : {}}
                                             {...(endDate) ? {endDate} : {}}
-                                            ranges={{
-                                                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                                            }}
+                                            ranges={selections}
                                             onApply={this.handleDateRange}
                                             >
                                             <div>
@@ -269,7 +274,7 @@ class Reports extends Component {
                                                 </Button>
                                             </div>
                                         </DateRangePicker>
-                                        <Button style={{top:'-2px', right:'5px'}} size="sm" className="form-control-sm-font-size remove" color="link" onClick={(e)=>{
+                                        {/* <Button style={{top:'-2px', right:'5px'}} size="sm" className="form-control-sm-font-size remove" color="link" onClick={(e)=>{
                                             this.setState({
                                                 pageState: {
                                                     start_date: '',end_date: ''
@@ -279,7 +284,7 @@ class Reports extends Component {
                                         }
                                         >
                                             <strong> X </strong>
-                                        </Button>
+                                        </Button> */}
                                     </div>
                                 </div>
                             </Col>
@@ -289,48 +294,52 @@ class Reports extends Component {
                                 </Button>
                             </Col>
                         </Row>
-                        {report_name}
-                        {is_annual ? 
-                        <ResponsiveContainer>
-                            <BarChart
-                                // width={800}
-                                // height={300}
-                                data={st.annual_report}
-                                margin={{
-                                top: 30, right: 15, left: 5, bottom: 15,
-                                }}
-                            >
-                                <XAxis dataKey="Month" tickSize
-                                    dy='25'/>
-                                <YAxis />
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <Tooltip />
-                                <Legend />
-                                <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
-                                <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
-                            </BarChart>
-                        </ResponsiveContainer>:
+                        
+                        <div style={{position:'relative'}}>
+                            <div style={{position:'absolute', top: '20px', width: '100%', fontWeight:'bold'}} align="center">{report_name} Report for the month of {startDate.format("MMMM")}</div>
+                            {is_annual ? 
 
-                        <ResponsiveContainer>
-                            <BarChart
-                                // width={800}
-                                // height={300}
-                                data={data}
-                                margin={{
-                                top: 30, right: 15, left: 5, bottom: 15,
-                                }}
-                            >
-                                <XAxis dataKey="name" tickSize
-                                    dy='25'/>
-                                <YAxis />
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <Tooltip />
-                                <Legend />
-                                <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
-                                <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
-                            </BarChart>
-                        </ResponsiveContainer>
-                        }
+                            <ResponsiveContainer>
+                                <BarChart
+                                    // width={800}
+                                    // height={300}
+                                    data={st.annual_report}
+                                    margin={{
+                                    top: 30, right: 15, left: 5, bottom: 15,
+                                    }}
+                                >
+                                    <XAxis dataKey="Month" tickSize
+                                        dy='25'/>
+                                    <YAxis />
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
+                                    <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
+                                </BarChart>
+                            </ResponsiveContainer>:
+    
+                            <ResponsiveContainer>
+                                <BarChart
+                                    // width={800}
+                                    // height={300}
+                                    data={data}
+                                    margin={{
+                                    top: 30, right: 15, left: 5, bottom: 15,
+                                    }}
+                                >
+                                    <XAxis dataKey="name" tickSize
+                                        dy='25'/>
+                                    <YAxis />
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
+                                    <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
+                                </BarChart>
+                            </ResponsiveContainer>
+                            }
+                        </div>
                     </Col>
                 </Row>
                 

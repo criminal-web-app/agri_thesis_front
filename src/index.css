@@ -208,3 +208,17 @@ h6 {
 .col{
   flex:1;
 }
+
+input::placeholder{
+  color: #d87001;
+}
+
+.daterangepicker_end_input {
+  display: none;
+}
+
+.range_inputs { font-size: 0px; }
+.range_inputs * { display: none; }
+.ranges li:last-child { display: none; }
+
+.ranges li:last-child { display: none; }
