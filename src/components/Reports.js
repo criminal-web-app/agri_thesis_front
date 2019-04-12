@@ -222,9 +222,10 @@ class Reports extends Component {
         let selections = {}
         for(var a=0; a<=Month; a++){
             const lastDay = moment(new Date(date.getFullYear(), month[a+1] , 0)).format('DD');
-            selections[month[a]] = [moment().startOf(month[a]), moment().endOf(month[a])]
+            selections[month[a]] = [moment().subtract(Month-a, 'month').startOf('month'), moment().subtract(Month-a, 'month').endOf('month')]
+            
         }
-        console.log(st.annual_report)
+        console.log(st.annual_report, selections, month, month[0], Month)
         const report_name = pr.location.pathname==='/reports' ? 'Average' :
                             pr.location.pathname==='/report/annual' ? 'Annual' : 
                             st.report_name
@@ -246,7 +247,7 @@ class Reports extends Component {
                     <Col sm="12" md="9">
                         <Row>
                             <Col sm="12" md="4" lg="3" style={{padding: '0', marginBottom: '10px'}}>
-                                <div>
+                            {!pr.apiRoute && <div>
                                     <div className="react-date-range-picker">
                                         <DateRangePicker
                                             // opens="left"
@@ -286,10 +287,10 @@ class Reports extends Component {
                                             <strong> X </strong>
                                         </Button> */}
                                     </div>
-                                </div>
+                                </div>}
                             </Col>
                             <Col align="right" style={{paddingRight: '0'}}>
-                                <Button color="success" style={{padding: '0 30px'}} onClick={()=>window.open(`/report/print/${id? id: pr.apiRoute? 'annual': 'average'}${params}`)}>
+                                <Button color="success" style={pr.apiRoute?  {padding: '0 30px', marginBottom: '10px'}:{padding: '0 30px'}} onClick={()=>window.open(`/report/print/${id? id: pr.apiRoute? 'annual': 'average'}${params}`)}>
                                     Print Report
                                 </Button>
                             </Col>

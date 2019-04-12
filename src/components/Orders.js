@@ -40,18 +40,68 @@ class Products extends Component {
                 accessor: "last_name",
                 Cell: row=> Helpers.handleDisplay(((row.original.last_name) ? (row.original.last_name+', ') : '') + row.original.first_name || '')
             },
+            // {
+            //     Header: "Date",
+            //     headerClassName: 'text-left',
+            //     // sortable: false,
+            //     accessor: "created",
+            //     Cell: row=> Helpers.handleDate(row.value, DATE_FORMAT)
+            // },
+            // {
+            //     Header: "Address",
+            //     headerClassName: 'text-left',
+            //     accessor: "address",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
             {
-                Header: "Date",
+                Header: "Mobile No.",
                 headerClassName: 'text-left',
-                sortable: false,
-                accessor: "created",
-                Cell: row=> Helpers.handleDate(row.value, DATE_FORMAT)
+                accessor: "phone_number",
+                Cell: row=> Helpers.handleDisplay(row.value)
             },
             {
-                Header: "Role",
+                Header: "Email Address",
                 headerClassName: 'text-left',
-                accessor: "role",
+                accessor: "email",
                 Cell: row=> Helpers.handleDisplay(row.value)
+            },
+            // {
+            //     Header: "Quantity",
+            //     headerClassName: 'text-left',
+            //     accessor: "quantity",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
+            {
+                Header: "Status",
+                headerClassName: 'text-left',
+                accessor: "_status",
+                Cell: row=> Helpers.handleDisplay(!row.original.is_read ? 'Pending' : row.original.is_completed ? 'Completed' : 'Processing')
+            },
+            // {
+            //     Header: "Action",
+            //     headerClassName: 'text-left',
+            //     accessor: "email",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
+            // {
+            //     Header: "Total Cost",
+            //     headerClassName: 'text-left',
+            //     accessor: "total_cost",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
+            // {
+            //     Header: "Tracking No.",
+            //     headerClassName: 'text-left',
+            //     accessor: "tracking_no",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
+            {
+                Header: "Action",
+                headerClassName: 'text-left',
+                accessor: "_actions",
+                Cell: row=> {
+                    return <Button onClick={()=> this.props.history.push(`order/${row.original.id}`)}>View</Button>
+                }
             },
         ],
     }
@@ -175,7 +225,7 @@ class Products extends Component {
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <div className="pad-md">
-                    <Row>
+                    {/* <Row>
                         <Col className="margin-bottom-md">
                             <div style={{marginBottom: '10px', position: 'relative'}}>
                                 <span style={{position: 'absolute', bottom: '5px', color: 'white'}}>Filter by:</span> 
@@ -188,6 +238,16 @@ class Products extends Component {
                             </div>
                             <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
                             {messages}
+                        </Col>
+                    </Row> */}
+                    <Row>
+                        <Col>
+                            <ReactTable
+                                {...{
+                                    ...Helpers.reactTableDefault({st, that: that}),
+                                    // className: 'hideHeader'
+                                }}
+                            />
                         </Col>
                     </Row>
                     <ConfirmModal

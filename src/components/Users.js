@@ -247,7 +247,7 @@ class Users extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className="user">
+                                <Col >
                                     <ReactTable
                                         {...{
                                             ...Helpers.reactTableDefault({st, that: that}),

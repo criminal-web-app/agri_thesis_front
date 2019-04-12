@@ -75,7 +75,7 @@ h6 {
 }
 
 .user .ReactTable{
-  background: #fff;
+  /* background: #fff; */
 }
 
 .rt-resizable-header-content{
@@ -179,18 +179,32 @@ h6 {
 }
 
 .ReactTable{
-  background: transparent !important;
+  /* background: transparent !important; */
+  border: 2px solid #014401;
+}
+
+.product_table .ReactTable .rt-tr{
+  margin-bottom: 5px;
 }
 
 .ReactTable .rt-tr{
-  border: 2px solid #014401;
-  border-radius: 5px;
-  margin-bottom: 5px;
+  /* border: 2px solid #014401; */
+  /* border-radius: 5px; */
   background: white !important;
 }
 
-.ReactTable .rt-td{
+.rt-td{
+  white-space: nowrap !important;
+  /* border-left: 2px solid #014401 !important; */
+  border-left: 1px solid #014401 !important;
+  border-top: 2px solid #014401 !important;
+  border-bottom: 2px solid #014401 !important;
+  border-right: 1px solid #014401 !important;
+}
+
+.rt-th{
   white-space: normal;
+  border: 2px solid #014401 !important;
 }
 
 .user .ReactTable .rt-td{

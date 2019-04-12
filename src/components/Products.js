@@ -232,7 +232,7 @@ class Products extends Component {
                                 </Col>}
                             </Row>
                             <Row>
-                                <Col>
+                                <Col className="product_table">
                                     <ReactTable
                                         {...{
                                             ...Helpers.reactTableDefault({st, that: that}),
