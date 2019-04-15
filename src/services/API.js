@@ -198,7 +198,7 @@ export const getActivities = ({params={}}) => {
 export const getOrders = ({params={}}) => {
   const config={}
   config.method = 'GET'
-  config.route = `/orders`
+  config.route = `/ordersv1`
   config.params = params
   return queryService(config)
 }
@@ -206,23 +206,24 @@ export const getOrders = ({params={}}) => {
 export const getOrder = (id) => {
   const config={}
   config.method = 'GET'
-  config.route = `/orders/${id}`
+  config.route = `/ordersv1/${id}`
   return queryService(config)
 }
 
 export const completeOrder = (id) => {
   const config={}
   config.method = 'PUT'
-  config.route = `/orders/${id}`
+  config.route = `/ordersv1/${id}`
   return queryService(config)
 }
 
 // REPORTS
 
-export const getReports = () => {
+export const getReports = ({params={}}) => {
   const config={}
   config.method = 'GET'
   config.route = `/reports`
+  config.params = params
   return queryService(config)
 }
 

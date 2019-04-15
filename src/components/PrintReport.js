@@ -132,28 +132,28 @@ class PrintReport extends Component {
         const st = this.state;
         const data = st.report.length ? [
             {
-                name: 1, fw: st.report[0].fw1, bw: st.report[0].bw1
+                name: 'T1', fw: st.report[0].fw1, bw: st.report[0].bw1
             },
             {
-                name: 2, fw: st.report[0].fw2, bw: st.report[0].bw2
+                name: 'T2', fw: st.report[0].fw2, bw: st.report[0].bw2
             },
             {
-                name: 3, fw: st.report[0].fw3, bw: st.report[0].bw3
+                name: 'T3', fw: st.report[0].fw3, bw: st.report[0].bw3
             },
             {
-                name: 4, fw: st.report[0].fw4, bw: st.report[0].bw4
+                name: 'T4', fw: st.report[0].fw4, bw: st.report[0].bw4
             },
             {
-                name: 5, fw: st.report[0].fw5, bw: st.report[0].bw5
+                name: 'T5', fw: st.report[0].fw5, bw: st.report[0].bw5
             },
             {
-                name: 6, fw: st.report[0].fw6, bw: st.report[0].bw6
+                name: 'T6', fw: st.report[0].fw6, bw: st.report[0].bw6
             },
             {
-                name: 7, fw: st.report[0].fw7, bw: st.report[0].bw7
+                name: 'T7', fw: st.report[0].fw7, bw: st.report[0].bw7
             },
             {
-                name: 8, fw: st.report[0].fw8, bw: st.report[0].bw8
+                name: 'T8', fw: st.report[0].fw8, bw: st.report[0].bw8
             },
         ] : ''
         const is_annual = this.props.location.pathname==='/report/print/annual'
@@ -175,7 +175,7 @@ class PrintReport extends Component {
                         >
                             <XAxis dataKey="Month" tickSize
                                 dy='25'/>
-                            <YAxis />
+                            <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
                             <CartesianGrid strokeDasharray="3 3" />
                             {/* <Tooltip /> */}
                             <Legend />
@@ -194,7 +194,7 @@ class PrintReport extends Component {
                         >
                             <XAxis dataKey="name" tickSize
                                 dy='25'/>
-                            <YAxis />
+                            <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
                             <CartesianGrid strokeDasharray="3 3" />
                             {/* <Tooltip /> */}
                             <Legend />

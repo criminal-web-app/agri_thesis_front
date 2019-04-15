@@ -29,6 +29,19 @@ month[9] = "October";
 month[10] = "November";
 month[11] = "December";
 const qs = require('query-string');
+
+const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
+    const isVert = axisType === 'yAxis';
+    const cx = isVert ? x : x + (width / 2);
+    const cy = isVert ? (height / 2) + y : y + height + 10;
+    const rot = isVert ? `270 ${cx} ${cy}` : 0;
+    return (
+      <text x={cx} y={cy} transform={`rotate(${rot})`} textAnchor="middle" stroke={stroke}>
+        {children}
+      </text>
+    );
+  };
+
 class Reports extends Component {
     urlSearch = qs.parse(this.props.history.location.search)
     state = {
@@ -118,7 +131,11 @@ class Reports extends Component {
     componentDidMount = () => {
         const {id} = this.props.match.params
         this.setState({isLoading: true})
-        API.getReports()
+        const params={
+            sort_id: 'created',
+            sort_desc: 'desc',
+        }
+        API.getReports({params})
         .then((response)=>{
             const newData = response.data.filter((report,index,self)=>
                 index === self.findIndex((t) => (
@@ -189,28 +206,28 @@ class Reports extends Component {
         ))
         const data = st.report.length ? [
             {
-                name: 1, fw: st.report[0].fw1, bw: st.report[0].bw1
+                name: 'T1', fw: st.report[0].fw1, bw: st.report[0].bw1
             },
             {
-                name: 2, fw: st.report[0].fw2, bw: st.report[0].bw2
+                name: 'T2', fw: st.report[0].fw2, bw: st.report[0].bw2
             },
             {
-                name: 3, fw: st.report[0].fw3, bw: st.report[0].bw3
+                name: 'T3', fw: st.report[0].fw3, bw: st.report[0].bw3
             },
             {
-                name: 4, fw: st.report[0].fw4, bw: st.report[0].bw4
+                name: 'T4', fw: st.report[0].fw4, bw: st.report[0].bw4
             },
             {
-                name: 5, fw: st.report[0].fw5, bw: st.report[0].bw5
+                name: 'T5', fw: st.report[0].fw5, bw: st.report[0].bw5
             },
             {
-                name: 6, fw: st.report[0].fw6, bw: st.report[0].bw6
+                name: 'T6', fw: st.report[0].fw6, bw: st.report[0].bw6
             },
             {
-                name: 7, fw: st.report[0].fw7, bw: st.report[0].bw7
+                name: 'T7', fw: st.report[0].fw7, bw: st.report[0].bw7
             },
             {
-                name: 8, fw: st.report[0].fw8, bw: st.report[0].bw8
+                name: 'T8', fw: st.report[0].fw8, bw: st.report[0].bw8
             },
         ] : ''
 
@@ -297,7 +314,9 @@ class Reports extends Component {
                         </Row>
                         
                         <div style={{position:'relative'}}>
-                            <div style={{position:'absolute', top: '20px', width: '100%', fontWeight:'bold'}} align="center">{report_name} Report for the month of {startDate.format("MMMM")}</div>
+                            <div style={{position:'absolute', top: '20px', width: '100%', fontWeight:'bold'}} align="center">
+                                {report_name === 'Annual' ? `Annual report for the year of ${startDate.format("YYYY")}`: `${report_name} report for the month of ${startDate.format("MMMM")}`} 
+                            </div>
                             {is_annual ? 
 
                             <ResponsiveContainer>
@@ -311,7 +330,7 @@ class Reports extends Component {
                                 >
                                     <XAxis dataKey="Month" tickSize
                                         dy='25'/>
-                                    <YAxis />
+                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <Tooltip />
                                     <Legend />
@@ -326,12 +345,12 @@ class Reports extends Component {
                                     // height={300}
                                     data={data}
                                     margin={{
-                                    top: 30, right: 15, left: 5, bottom: 15,
+                                    top: 30, right: 15, left: 25, bottom: 15,
                                     }}
                                 >
                                     <XAxis dataKey="name" tickSize
-                                        dy='25'/>
-                                    <YAxis />
+                                        dy='25' />
+                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <Tooltip />
                                     <Legend />
