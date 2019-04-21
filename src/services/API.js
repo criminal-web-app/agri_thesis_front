@@ -210,6 +210,21 @@ export const getOrder = (id) => {
   return queryService(config)
 }
 
+export const updateOrder = (body, id) => {
+  const config={}
+  config.method = 'PUT'
+  config.route = `/ordersv1/${id}`
+  config.body = body
+  return queryService(config)
+}
+
+export const cancelOrder = (id) => {
+  const config={}
+  config.method = 'PUT'
+  config.route = `/orders/cancel/${id}`
+  return queryService(config)
+}
+
 export const completeOrder = (id) => {
   const config={}
   config.method = 'PUT'

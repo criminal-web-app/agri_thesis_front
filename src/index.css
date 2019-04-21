@@ -194,12 +194,16 @@ h6 {
 }
 
 .rt-td{
-  white-space: nowrap !important;
+  white-space: pre-wrap !important;
   /* border-left: 2px solid #014401 !important; */
   border-left: 1px solid #014401 !important;
   border-top: 2px solid #014401 !important;
   border-bottom: 2px solid #014401 !important;
   border-right: 1px solid #014401 !important;
+}
+
+.ReactTable .rt-td{
+  white-space: pre-wrap !important;
 }
 
 .rt-th{
@@ -210,6 +214,10 @@ h6 {
 .user .ReactTable .rt-td{
   white-space: pre-wrap;
   align-self: center;
+}
+
+.ReactTable .rt-td{
+  white-space: pre-wrap !important;
 }
 
 .search-bar::placeholder { 

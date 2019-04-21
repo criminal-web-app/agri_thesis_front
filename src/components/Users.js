@@ -84,7 +84,7 @@ class Users extends Component {
                 Header: "Action",
                 headerClassName: 'text-right grid',
                 accessor: "_actions_",
-                width: 70,
+                width: 80,
                 Cell: row=> {return <div>
                         <Button color="danger" onClick={()=>this.setState({isItemModalOpen: true, confirmUser: row.original})}
                             className="form-control-sm-font-size input-text-sm-pd input-height-xsm button-adjust-padding-sm">

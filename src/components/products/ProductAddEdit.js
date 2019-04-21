@@ -204,12 +204,12 @@ class ProductAddEdit extends Component {
         }, {})
         return(
             <Row >
-                <Col lg="8" sm="11" xs="11" style={{border: '2px solid rgb(252, 168, 108)', padding: '20px', margin: 'auto'}}>
+                <Col lg="8" sm="11" xs="11" style={{background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', padding: '20px', margin: 'auto'}}>
                     <Loader 
                         isLoading={st.isLoading || false}
                     />
                     <div > 
-                        <h4 style={{textAlign: 'center'}}>{method} Products!</h4>
+                        <h4 style={{textAlign: 'center', color: '#d87001'}}>{method} Products!</h4>
                         <AvForm onValidSubmit={this.handleSubmit} ref={c => (this.form = c)}> 
                             <Row>
                                 <Col xs={12} sm={12} md={12} lg={10} style={{margin: 'auto'}}>

@@ -12,7 +12,7 @@ import SearchBar from './SearchBar.js'
 import ConfirmModal from '../modals/ConfirmModal'
 
 import background from '../pic/photo.jpg';
-import {FaTrashAlt, FaEdit} from 'react-icons/fa/'
+import {FaTrashAlt, FaEdit, FaCheck, FaTimes} from 'react-icons/fa/'
 import Loader from './Loader'
 const moment = require('moment');
 
@@ -26,6 +26,7 @@ class Products extends Component {
         data: [],
         query: this.urlSearch.search || '',
         confirmUser: {username: ''},
+        filter: 'ALL',
         pageState: {
             page: (parseInt(this.urlSearch.page || 0) > 0 ? (parseInt(this.urlSearch.page || 0) - 1 ) : 0),
             limit: parseInt(this.urlSearch.limit || 10),
@@ -35,24 +36,31 @@ class Products extends Component {
         },
         columns: [
             {
+                Header: "Product",
+                headerClassName: 'text-left',
+                accessor: "product_name",
+                Cell: row=> Helpers.handleDisplay(row.value)
+            },
+            
+            // {
+            //     Header: "Status",
+            //     headerClassName: 'text-left',
+            //     accessor: "status",
+            //     Cell: row=> Helpers.handleDisplay(row.value)
+            // },
+            
+            {
                 Header: "Name",
                 headerClassName: 'text-left',
                 accessor: "last_name",
                 Cell: row=> Helpers.handleDisplay(((row.original.last_name) ? (row.original.last_name+', ') : '') + row.original.first_name || '')
+            }, 
+            {
+                Header: "Address",
+                headerClassName: 'text-left',
+                accessor: "address",
+                Cell: row=> Helpers.handleDisplay(row.value)
             },
-            // {
-            //     Header: "Date",
-            //     headerClassName: 'text-left',
-            //     // sortable: false,
-            //     accessor: "created",
-            //     Cell: row=> Helpers.handleDate(row.value, DATE_FORMAT)
-            // },
-            // {
-            //     Header: "Address",
-            //     headerClassName: 'text-left',
-            //     accessor: "address",
-            //     Cell: row=> Helpers.handleDisplay(row.value)
-            // },
             {
                 Header: "Mobile No.",
                 headerClassName: 'text-left',
@@ -72,10 +80,17 @@ class Products extends Component {
             //     Cell: row=> Helpers.handleDisplay(row.value)
             // },
             {
+                Header: "Quantity",
+                headerClassName: 'text-left',
+                accessor: "quantity",
+                Cell: row=> Helpers.handleDisplay(row.value)
+            },
+            {
                 Header: "Status",
                 headerClassName: 'text-left',
                 accessor: "_status",
-                Cell: row=> Helpers.handleDisplay(!row.original.is_read ? 'Pending' : row.original.is_completed ? 'Completed' : 'Processing')
+                sortable: false,
+                Cell: row=> Helpers.handleDisplay(row.original.is_cancelled ? 'Cancelled' : row.original.is_completed ? 'Completed' : !row.original.is_read ? 'Pending' : 'Processing')
             },
             // {
             //     Header: "Action",
@@ -96,17 +111,85 @@ class Products extends Component {
             //     Cell: row=> Helpers.handleDisplay(row.value)
             // },
             {
+                Header: "Total Price",
+                headerClassName: 'text-left',
+                accessor: "total_item",
+                Cell: row=> Helpers.handleDisplay(row.value)
+            },
+            {
+                Header: "Tracking Number",
+                headerClassName: 'text-left',
+                accessor: "code",
+                Cell: row=> <div>
+                        {/* <Input 
+                            // className="input-sip form-control-sm-font-size input-sm input-height-xsm input-text-sm-pd talign-right"
+                            type="text"
+                            value={row.value||''}
+                            style={{marginBottom:'5px'}}
+                            onChange={(e)=>{
+                                console.log(e)
+                                const newData = this.state.data.map((dataRow, index)=>{
+                                    if(index === row.index){
+                                        return {...dataRow, code: e.target.value}
+                                    } else {
+                                        return {...dataRow}
+                                    }
+                                })
+                                this.setState({data: newData})
+                            }}
+                        />
+                        <Button color="primary" style={{float: 'right'}} onClick={()=>{this.updateOrder(row)}}><FaEdit/> Edit</Button> */}
+                        {Helpers.handleDisplay(row.value)}
+                    </div>
+            },
+            {
                 Header: "Action",
                 headerClassName: 'text-left',
                 accessor: "_actions",
                 Cell: row=> {
-                    return <Button onClick={()=> this.props.history.push(`order/${row.original.id}`)}>View</Button>
+                    return <div>
+                        <Button color="danger" style={{marginBottom: '5px', display: 'block', width: '100%'}} onClick={()=> this.cancelOrder(row)}><FaTimes/> Cancel</Button>
+                        <Button color="success" style={{width: '100%'}} onClick={()=> this.completeOrder(row)}><FaCheck/> Complete</Button>
+                    </div>
                 }
             },
         ],
     }
 
     prevColumn = this.state.columns || {}
+
+    updateOrder = (row)=>{
+        const body={
+            code: row.value
+        }
+        API.updateOrder(body,row.original.id)
+        .then((response)=>{
+            TOAST.pop({message: "Sucessfully updated order"})
+        }, err=> {
+            TOAST.pop({message: err.message, type: "error"})
+        })
+    }
+
+    cancelOrder = (row)=>{
+        API.cancelOrder(row.original.id)
+        .then((response)=>{
+            TOAST.pop({message: "Sucessfully cancelled order"})
+            this.fetchData()
+        }, err=> {
+            TOAST.pop({message: err.message, type: "error"})
+        })
+    }
+
+
+    completeOrder = (row)=>{
+        API.completeOrder(row.original.id)
+        .then((response)=>{
+            TOAST.pop({message: "Sucessfully completed order"})
+            this.fetchData()
+        }, err=> {
+            TOAST.pop({message: err.message, type: "error"})
+        })
+    }
 
     selectActionToggled = (item) => {
         this.setState({
@@ -139,9 +222,10 @@ class Products extends Component {
             search: st.pageState.search,
             sort_id: st.pageState.sort_id || '',
             sort_desc: (!st.pageState.sort_id) ? '' :
-                       (st.pageState.sort_desc || '').toString() === 'true' ? st.pageState.sort_desc : 'desc',
-            is_read: st.filter === 'PENDING' ? 'false' : st.filter==='ALL' ? '' : 'true',
-            is_completed: st.filter === 'COMPLETED' ? 'true' : st.filter === 'PROCESSING' ? 'false': '',
+                       (st.pageState.sort_desc || '').toString() === 'true' ? 'asc' : 'desc',
+            is_read: st.filter === 'PENDING' ? 'false' : '',
+            is_completed: st.filter === 'COMPLETED' ? 'true' : st.filter === 'PENDING' ? 'false' : '',
+            is_cancelled: st.filter === 'CANCELLED' ? 'true' : st.filter === 'PENDING' ? 'false' : ''
         }
         console.log(params)
         API.getOrders({params})
@@ -225,31 +309,47 @@ class Products extends Component {
         return (
             <div style={{margin: '0 5% 15px'}}> 
                 <div className="pad-md">
-                    {/* <Row>
-                        <Col className="margin-bottom-md">
-                            <div style={{marginBottom: '10px', position: 'relative'}}>
-                                <span style={{position: 'absolute', bottom: '5px', color: 'white'}}>Filter by:</span> 
-                                <Input style={{maxWidth: '150px', marginLeft: '70px', padding: '5px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
-                                    <option>ALL</option>
-                                    <option>PENDING</option>
-                                    <option>PROCESSING</option>
-                                    <option>COMPLETED</option>
-                                </Input>
-                            </div>
-                            <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
-                            {messages}
-                        </Col>
-                    </Row> */}
                     <Row>
-                        <Col>
-                            <ReactTable
-                                {...{
-                                    ...Helpers.reactTableDefault({st, that: that}),
-                                    // className: 'hideHeader'
-                                }}
-                            />
+                        <Col className="margin-bottom-md">
+                            <Row>
+                                <Col md="3" className="margin-bottom-sm"  style={{marginBottom: '10px'}}>
+                                    <SearchBar
+                                        query={st.query}
+                                        placeholder={'Search Order'}
+                                        loading={st.searchLoading}
+                                        didSearch={this.handleSearch}
+                                        onChangeQuery={(e) => {this.setState({query: e.target.value})}}
+                                    />  
+                                </Col>
+                                <Col className="margin-bottom-md">
+                                    <div style={{marginBottom: '10px', position: 'relative'}}>
+                                        <span style={{position: 'absolute', bottom: '5px', color: 'white'}}>Filter by:</span> 
+                                        <Input style={{maxWidth: '150px', marginLeft: '70px', padding: '5px'}} type="select" name="filter" value={this.state.filter} onChange={(e)=>this.setState({filter: e.target.value},()=> this.fetchData())}>
+                                            <option>ALL</option>
+                                            <option>PENDING</option>
+                                            {/* <option>PROCESSING</option> */}
+                                            <option>COMPLETED</option>
+                                            <option>CANCELLED</option>
+                                        </Input>
+                                    </div>
+                                    {/* <hr style={{color: 'rgb(150,150,150,0.5)'}}/>
+                                    {messages} */}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <ReactTable
+                                        {...{
+                                            ...Helpers.reactTableDefault({st, that: that}),
+                                            // className: 'orders'
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
+                    
+                    
                     <ConfirmModal
                         size="sm"
                         takeAction={()=>this.deleteUser(st.confirmUser)}

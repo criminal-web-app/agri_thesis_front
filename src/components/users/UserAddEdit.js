@@ -200,7 +200,7 @@ class UserAddEdit extends Component {
                                     password: '123456'}})
         }, err => {
             TOAST.pop({message: err.message, type: 'error'})
-        })
+        }).finally(()=> this.setState({isLoading:false}))
     }
 
     handleSubmit = (event, values) => {
@@ -284,7 +284,7 @@ class UserAddEdit extends Component {
             <Row >
                 <Col lg="6" md="9" sm="11" xs="11" style={{background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', padding: '20px', margin: 'auto'}}>
                     <div > 
-                        <h4 style={{textAlign: 'center'}}>{method} User!</h4>
+                        <h4 style={{textAlign: 'center', color: '#d87001'}}>{method} User!</h4>
                         <AvForm onValidSubmit={this.handleSubmit} ref={c => (this.form = c)}> 
                             <Row>
                                 <Col xs={12} sm={12} md={12} lg={10} style={{margin: 'auto'}}>
