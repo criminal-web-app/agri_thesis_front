@@ -247,21 +247,21 @@ class Reports extends Component {
                             pr.location.pathname==='/report/annual' ? 'Annual' : 
                             st.report_name
         return (
-            <div style={{margin: '0 5% 15px'}}> 
+            <div style={{margin: '0 2% 15px'}}> 
                 <Row>
-                    <Col sm="12" md="3" style={{overflowY:'auto', background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', paddingTop: '10px'}} className="report-buttons">
-                    <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                        onClick={()=>pr.history.push(`/report/annual${newParams}`)}>
-                        Annual Report
-                    </Button>
-                    <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
-                        onClick={()=>pr.history.push(`/reports${newParams}`)}>
-                        Average Report
-                    </Button>
-                        <div>Select Report: </div>
-                        {reports}
+                    <Col sm="12" md="2" style={{overflowY:'auto', background: 'white', marginBottom: '10px', border: '2px solid #014401', borderRadius: '5px', paddingTop: '10px'}} className="report-buttons">
+                        <Button color={!id && pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                            onClick={()=>pr.history.push(`/report/annual${newParams}`)}>
+                            Annual Report
+                        </Button>
+                        <Button color={!id && !pr.apiRoute ? "primary" : "secondary"} style={{width: '100%', marginBottom: '5px'}}
+                            onClick={()=>pr.history.push(`/reports${newParams}`)}>
+                            Average Report
+                        </Button>
+                            <div>Select Report: </div>
+                            {reports}
                     </Col>
-                    <Col sm="12" md="9">
+                    <Col sm="12" md="8">
                         <Row>
                             <Col sm="12" md="4" lg="3" style={{padding: '0', marginBottom: '10px'}}>
                             {!pr.apiRoute && <div>
@@ -315,7 +315,9 @@ class Reports extends Component {
                         
                         <div style={{position:'relative'}}>
                             <div style={{position:'absolute', top: '20px', width: '100%', fontWeight:'bold'}} align="center">
-                                {report_name === 'Annual' ? `Annual report for the year of ${startDate.format("YYYY")}`: `${report_name} report for the month of ${startDate.format("MMMM")}`} 
+                                {report_name === 'Annual' ? `Annual report for the year of ${startDate.format("YYYY")}`
+                                : report_name==='Average'? `${report_name} report for the month of ${startDate.format("MMMM")}` 
+                                : `${report_name} report`} 
                             </div>
                             {is_annual ? 
 
@@ -360,6 +362,20 @@ class Reports extends Component {
                             </ResponsiveContainer>
                             }
                         </div>
+                    </Col>
+                    <Col>
+                        <table style={{width:'100%'}}>
+                            <thead>
+                                <tr>
+                                    {['','R1','R2','R3','AVERAGE'].map((head)=><th key={head}>{head}</th>)}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>T1</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </Col>
                 </Row>
                 

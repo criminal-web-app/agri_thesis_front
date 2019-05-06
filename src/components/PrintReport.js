@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import * as API from '../services/API'
 import moment from 'moment';
 import { gDp } from '../helpers/helpers'
-
+import { Row, Col, Button } from 'reactstrap'
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -163,46 +163,64 @@ class PrintReport extends Component {
                 <div style={{}}>
                     <strong style={{fontSize: '24px'}}><span style={{fontSize: '36px'}}>{st.report.length ? st.report[0].name : st.annual_report.length ? 'Annual' : 'Average'}</span>&nbsp;{st.pageState.start_date ? `(${moment(st.pageState.start_date).format('MMMM DD YYYY')}` : ''} {st.pageState.end_date ? `- ${moment(st.pageState.end_date).format('MMMM DD YYYY')})` : ''}</strong>
                 </div>
-                {is_annual ? 
-                    <ResponsiveContainer>
-                        <BarChart
-                            // width={800}
-                            // height={300}
-                            data={st.annual_report}
-                            margin={{
-                            top: 30, right: 15, left: 5, bottom: 15,
-                            }}
-                        >
-                            <XAxis dataKey="Month" tickSize
-                                dy='25'/>
-                            <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            {/* <Tooltip /> */}
-                            <Legend />
-                            <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
-                            <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
-                        </BarChart>
-                    </ResponsiveContainer>:
-                    <ResponsiveContainer>
-                        <BarChart
-                            // width={800}
-                            // height={300}
-                            data={data}
-                            margin={{
-                            top: 30, right: 15, left: 5, bottom: 15,
-                            }}
-                        >
-                            <XAxis dataKey="name" tickSize
-                                dy='25'/>
-                            <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            {/* <Tooltip /> */}
-                            <Legend />
-                            <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
-                            <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
-                        </BarChart>
-                    </ResponsiveContainer>
-                }
+                <Row>
+                    <Col md="10">
+                        {is_annual ? 
+                            <ResponsiveContainer>
+                                <BarChart
+                                    // width={800}
+                                    // height={300}
+                                    data={st.annual_report}
+                                    margin={{
+                                    top: 30, right: 15, left: 5, bottom: 15,
+                                    }}
+                                >
+                                    <XAxis dataKey="Month" tickSize
+                                        dy='25'/>
+                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    {/* <Tooltip /> */}
+                                    <Legend />
+                                    <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
+                                    <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
+                                </BarChart>
+                            </ResponsiveContainer>:
+                            <ResponsiveContainer>
+                                <BarChart
+                                    // width={800}
+                                    // height={300}
+                                    data={data}
+                                    margin={{
+                                    top: 30, right: 15, left: 5, bottom: 15,
+                                    }}
+                                >
+                                    <XAxis dataKey="name" tickSize
+                                        dy='25'/>
+                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    {/* <Tooltip /> */}
+                                    <Legend />
+                                    <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
+                                    <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        }
+                    </Col>
+                    <Col md="2">
+                        <table style={{width:'100%'}}>
+                            <thead>
+                                <tr>
+                                    {['','R1','R2','R3','AVERAGE'].map((head)=><th key={head}>{head}</th>)}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>T1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </Col>
+                </Row>
             </div>
         );
     }

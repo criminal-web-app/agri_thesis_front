@@ -121,7 +121,7 @@ class Products extends Component {
                 headerClassName: 'text-left',
                 accessor: "code",
                 Cell: row=> <div>
-                        {/* <Input 
+                        <Input 
                             // className="input-sip form-control-sm-font-size input-sm input-height-xsm input-text-sm-pd talign-right"
                             type="text"
                             value={row.value||''}
@@ -138,8 +138,8 @@ class Products extends Component {
                                 this.setState({data: newData})
                             }}
                         />
-                        <Button color="primary" style={{float: 'right'}} onClick={()=>{this.updateOrder(row)}}><FaEdit/> Edit</Button> */}
-                        {Helpers.handleDisplay(row.value)}
+                        <Button color="primary" style={{float: 'right'}} onClick={()=>{this.updateOrder(row)}}><FaEdit/> Edit</Button>
+                        {/* {Helpers.handleDisplay(row.value)} */}
                     </div>
             },
             {
