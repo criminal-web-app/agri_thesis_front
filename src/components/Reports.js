@@ -77,7 +77,7 @@ class Reports extends Component {
         !st.pageState.end_date && delete params.end_date
         API.getReport(params,id)
         .then((response)=>{
-            this.setState({report: response.data})
+            this.setState({report: response.data, rawData: response.data})
         }, err => {
             TOAST.pop({report: [], message: err.message, type: 'error'})
         }).finally(()=> 
@@ -363,7 +363,7 @@ class Reports extends Component {
                             }
                         </div>
                     </Col>
-                    <Col>
+                    {id && <Col>
                         <table style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -373,10 +373,63 @@ class Reports extends Component {
                             <tbody>
                                 <tr>
                                     <td>T1</td>
+                                    <td>{st.rawData.fw_test[0][0]}</td>
+                                    <td>{st.rawData.fw_test[1][0]}</td>
+                                    <td>{st.rawData.fw_test[2][0]}</td>
+                                    <td>{st.rawData.average[0]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T2</td>
+                                    <td>{st.rawData.fw_test[0][1]}</td>
+                                    <td>{st.rawData.fw_test[1][1]}</td>
+                                    <td>{st.rawData.fw_test[2][1]}</td>
+                                    <td>{st.rawData.average[1]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T3</td>
+                                    <td>{st.rawData.fw_test[0][2]}</td>
+                                    <td>{st.rawData.fw_test[1][2]}</td>
+                                    <td>{st.rawData.fw_test[2][2]}</td>
+                                    <td>{st.rawData.average[2]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T4</td>
+                                    <td>{st.rawData.fw_test[0][3]}</td>
+                                    <td>{st.rawData.fw_test[1][3]}</td>
+                                    <td>{st.rawData.fw_test[2][3]}</td>
+                                    <td>{st.rawData.average[3]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T5</td>
+                                    <td>{st.rawData.fw_test[0][4]}</td>
+                                    <td>{st.rawData.fw_test[1][4]}</td>
+                                    <td>{st.rawData.fw_test[2][4]}</td>
+                                    <td>{st.rawData.average[4]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T6</td>
+                                    <td>{st.rawData.fw_test[0][5]}</td>
+                                    <td>{st.rawData.fw_test[1][5]}</td>
+                                    <td>{st.rawData.fw_test[2][5]}</td>
+                                    <td>{st.rawData.average[5]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T7</td>
+                                    <td>{st.rawData.fw_test[0][6]}</td>
+                                    <td>{st.rawData.fw_test[1][6]}</td>
+                                    <td>{st.rawData.fw_test[2][6]}</td>
+                                    <td>{st.rawData.average[6]}</td>
+                                </tr>
+                                <tr>
+                                    <td>T8</td>
+                                    <td>{st.rawData.fw_test[0][7]}</td>
+                                    <td>{st.rawData.fw_test[1][7]}</td>
+                                    <td>{st.rawData.fw_test[2][7]}</td>
+                                    <td>{st.rawData.average[7]}</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </Col>
+                    </Col>}
                 </Row>
                 
                 <Loader
