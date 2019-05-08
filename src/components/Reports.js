@@ -77,7 +77,28 @@ class Reports extends Component {
         !st.pageState.end_date && delete params.end_date
         API.getReport(params,id)
         .then((response)=>{
-            this.setState({report: response.data, rawData: response.data})
+            console.log(response)
+            const latestReport = response.data[response.data.length-1]
+            const newfw = JSON.parse(latestReport.avgfw)
+            const newbw = JSON.parse(latestReport.avgbw)
+            const fwRaw = [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])]
+            const bwRaw = [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])]
+            console.log(fwRaw, latestReport.fw)
+            const newReport = [
+                {
+                    ...response.data[response.data.length-1],
+                    fw1: newfw[0], bw1: newbw[0],
+                    fw2: newfw[1], bw2: newbw[1],
+                    fw3: newfw[2], bw3: newbw[2],
+                    fw4: newfw[3], bw4: newbw[3],
+                    fw5: newfw[4], bw5: newbw[4],
+                    fw6: newfw[5], bw6: newbw[5],
+                    fw7: newfw[6], bw7: newbw[6],
+                    fw8: newfw[7], bw8: newbw[7],
+                }
+            ]
+            console.log(newReport)
+            this.setState({report: newReport, rawData: {fwRaw, bwRaw, newfw, newbw}})
         }, err => {
             TOAST.pop({report: [], message: err.message, type: 'error'})
         }).finally(()=> 
@@ -242,7 +263,7 @@ class Reports extends Component {
             selections[month[a]] = [moment().subtract(Month-a, 'month').startOf('month'), moment().subtract(Month-a, 'month').endOf('month')]
             
         }
-        console.log(st.annual_report, selections, month, month[0], Month)
+        console.log(st)
         const report_name = pr.location.pathname==='/reports' ? 'Average' :
                             pr.location.pathname==='/report/annual' ? 'Annual' : 
                             st.report_name
@@ -261,7 +282,7 @@ class Reports extends Component {
                             <div>Select Report: </div>
                             {reports}
                     </Col>
-                    <Col sm="12" md="8">
+                    <Col sm="12" md={id ? "8" : "10"}>
                         <Row>
                             <Col sm="12" md="4" lg="3" style={{padding: '0', marginBottom: '10px'}}>
                             {!pr.apiRoute && <div>
@@ -364,6 +385,7 @@ class Reports extends Component {
                         </div>
                     </Col>
                     {id && <Col>
+                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Fresh Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -371,62 +393,31 @@ class Reports extends Component {
                                 </tr>
                             </thead>
                             <tbody>
+                                {gDp(st,'rawData.fwRaw',[]).length ? [1,2,3,4,5,6,7,8].map((row, index)=> <tr key={index}>
+                                    <td style={{textAlign: 'center'}}>T{index+1}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[0][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[1][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[2][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.newfw[index].toFixed(2)}</td>
+                                </tr>): ''}
+                            </tbody>
+                        </table>
+                        <br/>
+                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Dry Weight Test</div>
+                        <table style={{width:'100%'}}>
+                            <thead>
                                 <tr>
-                                    <td>T1</td>
-                                    <td>{st.rawData.fw_test[0][0]}</td>
-                                    <td>{st.rawData.fw_test[1][0]}</td>
-                                    <td>{st.rawData.fw_test[2][0]}</td>
-                                    <td>{st.rawData.average[0]}</td>
+                                    {['','R1','R2','R3','AVERAGE'].map((head)=><th key={head}>{head}</th>)}
                                 </tr>
-                                <tr>
-                                    <td>T2</td>
-                                    <td>{st.rawData.fw_test[0][1]}</td>
-                                    <td>{st.rawData.fw_test[1][1]}</td>
-                                    <td>{st.rawData.fw_test[2][1]}</td>
-                                    <td>{st.rawData.average[1]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T3</td>
-                                    <td>{st.rawData.fw_test[0][2]}</td>
-                                    <td>{st.rawData.fw_test[1][2]}</td>
-                                    <td>{st.rawData.fw_test[2][2]}</td>
-                                    <td>{st.rawData.average[2]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T4</td>
-                                    <td>{st.rawData.fw_test[0][3]}</td>
-                                    <td>{st.rawData.fw_test[1][3]}</td>
-                                    <td>{st.rawData.fw_test[2][3]}</td>
-                                    <td>{st.rawData.average[3]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T5</td>
-                                    <td>{st.rawData.fw_test[0][4]}</td>
-                                    <td>{st.rawData.fw_test[1][4]}</td>
-                                    <td>{st.rawData.fw_test[2][4]}</td>
-                                    <td>{st.rawData.average[4]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T6</td>
-                                    <td>{st.rawData.fw_test[0][5]}</td>
-                                    <td>{st.rawData.fw_test[1][5]}</td>
-                                    <td>{st.rawData.fw_test[2][5]}</td>
-                                    <td>{st.rawData.average[5]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T7</td>
-                                    <td>{st.rawData.fw_test[0][6]}</td>
-                                    <td>{st.rawData.fw_test[1][6]}</td>
-                                    <td>{st.rawData.fw_test[2][6]}</td>
-                                    <td>{st.rawData.average[6]}</td>
-                                </tr>
-                                <tr>
-                                    <td>T8</td>
-                                    <td>{st.rawData.fw_test[0][7]}</td>
-                                    <td>{st.rawData.fw_test[1][7]}</td>
-                                    <td>{st.rawData.fw_test[2][7]}</td>
-                                    <td>{st.rawData.average[7]}</td>
-                                </tr>
+                            </thead>
+                            <tbody>
+                                {gDp(st,'rawData.bwRaw',[]).length ? [1,2,3,4,5,6,7,8].map((row, index)=> <tr key={index}>
+                                    <td style={{textAlign: 'center'}}>T{index+1}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[0][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[1][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[2][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.newbw[index].toFixed(2)}</td>
+                                </tr>): ''}
                             </tbody>
                         </table>
                     </Col>}

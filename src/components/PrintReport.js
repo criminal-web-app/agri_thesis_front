@@ -46,12 +46,36 @@ class PrintReport extends Component {
         console.log('Hello')
         API.getReport(params,id)
         .then((response)=>{
-            this.setState({report: response.data},()=>{
+            const latestReport = response.data[response.data.length-1]
+            const newfw = JSON.parse(latestReport.avgfw)
+            const newbw = JSON.parse(latestReport.avgbw)
+            const fwRaw = [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])]
+            const bwRaw = [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])]
+            const newReport = [
+                {
+                    ...response.data[response.data.length-1],
+                    fw1: newfw[0], bw1: newbw[0],
+                    fw2: newfw[1], bw2: newbw[1],
+                    fw3: newfw[2], bw3: newbw[2],
+                    fw4: newfw[3], bw4: newbw[3],
+                    fw5: newfw[4], bw5: newbw[4],
+                    fw6: newfw[5], bw6: newbw[5],
+                    fw7: newfw[6], bw7: newbw[6],
+                    fw8: newfw[7], bw8: newbw[7],
+                }
+            ]
+            this.setState({report: newReport, rawData: {fwRaw, bwRaw, newfw, newbw}},()=>{
                 setTimeout(()=>{
                     window.print();
                     setTimeout(window.close, 0);
                 }, 500)
             })
+            // this.setState({report: response.data},()=>{
+            //     setTimeout(()=>{
+            //         window.print();
+            //         setTimeout(window.close, 0);
+            //     }, 500)
+            // })
         }, err => {
             
         }).finally(()=> 
@@ -130,6 +154,8 @@ class PrintReport extends Component {
 
     render() {
         const st = this.state;
+        const {id} = this.props.match.params
+        const isReportId = !['/report/print/annual','/report/print/average'].includes(this.props.location.pathname)
         const data = st.report.length ? [
             {
                 name: 'T1', fw: st.report[0].fw1, bw: st.report[0].bw1
@@ -164,7 +190,7 @@ class PrintReport extends Component {
                     <strong style={{fontSize: '24px'}}><span style={{fontSize: '36px'}}>{st.report.length ? st.report[0].name : st.annual_report.length ? 'Annual' : 'Average'}</span>&nbsp;{st.pageState.start_date ? `(${moment(st.pageState.start_date).format('MMMM DD YYYY')}` : ''} {st.pageState.end_date ? `- ${moment(st.pageState.end_date).format('MMMM DD YYYY')})` : ''}</strong>
                 </div>
                 <Row>
-                    <Col md="10">
+                    <Col md={isReportId ? "10": "12"}>
                         {is_annual ? 
                             <ResponsiveContainer>
                                 <BarChart
@@ -206,7 +232,8 @@ class PrintReport extends Component {
                             </ResponsiveContainer>
                         }
                     </Col>
-                    <Col md="2">
+                    {isReportId && <Col>
+                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Fresh Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -214,12 +241,34 @@ class PrintReport extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>T1</td>
-                                </tr>
+                                {gDp(st,'rawData.fwRaw',[]).length ? [1,2,3,4,5,6,7,8].map((row, index)=> <tr key={index}>
+                                    <td style={{textAlign: 'center'}}>T{index+1}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[0][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[1][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.fwRaw[2][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.newfw[index].toFixed(2)}</td>
+                                </tr>): ''}
                             </tbody>
                         </table>
-                    </Col>
+                        <br/>
+                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Dry Weight Test</div>
+                        <table style={{width:'100%'}}>
+                            <thead>
+                                <tr>
+                                    {['','R1','R2','R3','AVERAGE'].map((head)=><th key={head}>{head}</th>)}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {gDp(st,'rawData.bwRaw',[]).length ? [1,2,3,4,5,6,7,8].map((row, index)=> <tr key={index}>
+                                    <td style={{textAlign: 'center'}}>T{index+1}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[0][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[1][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.bwRaw[2][index]}</td>
+                                    <td style={{textAlign: 'center'}}>{st.rawData.newbw[index].toFixed(2)}</td>
+                                </tr>): ''}
+                            </tbody>
+                        </table>
+                    </Col>}
                 </Row>
             </div>
         );
