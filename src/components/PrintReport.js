@@ -49,8 +49,8 @@ class PrintReport extends Component {
             const latestReport = response.data[response.data.length-1]
             const newfw = JSON.parse(latestReport.avgfw)
             const newbw = JSON.parse(latestReport.avgbw)
-            const fwRaw = [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])]
-            const bwRaw = [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])]
+            const fwRaw = latestReport.fw.includes(':') ? [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])] : []
+            const bwRaw = latestReport.bw.includes(':') ? [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])] : []
             const newReport = [
                 {
                     ...response.data[response.data.length-1],
@@ -155,7 +155,7 @@ class PrintReport extends Component {
     render() {
         const st = this.state;
         const {id} = this.props.match.params
-        const isReportId = !['/report/print/annual','/report/print/average'].includes(this.props.location.pathname)
+        const isReportId = !['annual','average'].includes(id)
         const data = st.report.length ? [
             {
                 name: 'T1', fw: st.report[0].fw1, bw: st.report[0].bw1
@@ -189,50 +189,50 @@ class PrintReport extends Component {
                 <div style={{}}>
                     <strong style={{fontSize: '24px'}}><span style={{fontSize: '36px'}}>{st.report.length ? st.report[0].name : st.annual_report.length ? 'Annual' : 'Average'}</span>&nbsp;{st.pageState.start_date ? `(${moment(st.pageState.start_date).format('MMMM DD YYYY')}` : ''} {st.pageState.end_date ? `- ${moment(st.pageState.end_date).format('MMMM DD YYYY')})` : ''}</strong>
                 </div>
-                <Row>
-                    <Col md={isReportId ? "10": "12"}>
-                        {is_annual ? 
-                            <ResponsiveContainer>
-                                <BarChart
-                                    // width={800}
-                                    // height={300}
-                                    data={st.annual_report}
-                                    margin={{
-                                    top: 30, right: 15, left: 5, bottom: 15,
-                                    }}
-                                >
-                                    <XAxis dataKey="Month" tickSize
-                                        dy='25'/>
-                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    {/* <Tooltip /> */}
-                                    <Legend />
-                                    <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
-                                    <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
-                                </BarChart>
-                            </ResponsiveContainer>:
-                            <ResponsiveContainer>
-                                <BarChart
-                                    // width={800}
-                                    // height={300}
-                                    data={data}
-                                    margin={{
-                                    top: 30, right: 15, left: 5, bottom: 15,
-                                    }}
-                                >
-                                    <XAxis dataKey="name" tickSize
-                                        dy='25'/>
-                                    <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    {/* <Tooltip /> */}
-                                    <Legend />
-                                    <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
-                                    <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        }
-                    </Col>
-                    {isReportId && <Col>
+                <div style={{width: '60%', height: '800px'}}>
+                    {is_annual ? 
+                        <ResponsiveContainer>
+                            <BarChart
+                                // width={800}
+                                // height={300}
+                                data={st.annual_report}
+                                margin={{
+                                top: 30, right: 15, left: 5, bottom: 15,
+                                }}
+                            >
+                                <XAxis dataKey="Month" tickSize
+                                    dy='25'/>
+                                <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                {/* <Tooltip /> */}
+                                <Legend />
+                                <Bar name="Fresh Weight Test" dataKey="avg_fw" fill="#82ca9d"/>
+                                <Bar name="Dry Weight Test" dataKey="avg_bw" fill="#8884d8"/>
+                            </BarChart>
+                        </ResponsiveContainer>:
+                        <ResponsiveContainer>
+                            <BarChart
+                                // width={800}
+                                // height={300}
+                                data={data}
+                                margin={{
+                                top: 30, right: 15, left: 5, bottom: 15,
+                                }}
+                            >
+                                <XAxis dataKey="name" tickSize
+                                    dy='25'/>
+                                <YAxis label={{ value: 'Average Weight', angle: -90, position: 'insideLeft' }}/>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                {/* <Tooltip /> */}
+                                <Legend />
+                                <Bar name="Fresh Weight Test" dataKey="fw" fill="#82ca9d"/>
+                                <Bar name="Dry Weight Test" dataKey="bw" fill="#8884d8"/>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    }
+                </div>
+                {isReportId && <Row>
+                    <Col>
                         <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Fresh Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
@@ -250,7 +250,8 @@ class PrintReport extends Component {
                                 </tr>): ''}
                             </tbody>
                         </table>
-                        <br/>
+                    </Col>
+                    <Col>
                         <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Dry Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
@@ -268,8 +269,8 @@ class PrintReport extends Component {
                                 </tr>): ''}
                             </tbody>
                         </table>
-                    </Col>}
-                </Row>
+                    </Col>
+                </Row>}
             </div>
         );
     }

@@ -11,6 +11,7 @@ import Loader from './Loader'
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { CSVLink, CSVDownload } from "react-csv";
 
 import {FaCalendar} from 'react-icons/fa/'
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -79,10 +80,10 @@ class Reports extends Component {
         .then((response)=>{
             console.log(response)
             const latestReport = response.data[response.data.length-1]
-            const newfw = JSON.parse(latestReport.avgfw)
-            const newbw = JSON.parse(latestReport.avgbw)
-            const fwRaw = [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])]
-            const bwRaw = [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])]
+            const newfw = latestReport.avgfw.length ? JSON.parse(latestReport.avgfw) : []
+            const newbw = latestReport.avgbw.length ? JSON.parse(latestReport.avgbw) : []
+            const fwRaw = latestReport.fw.includes(':') ? [JSON.parse(latestReport.fw.split(":")[0]),JSON.parse(latestReport.fw.split(":")[1]),JSON.parse(latestReport.fw.split(":")[2])] : []
+            const bwRaw = latestReport.bw.includes(':') ? [JSON.parse(latestReport.bw.split(":")[0]),JSON.parse(latestReport.bw.split(":")[1]),JSON.parse(latestReport.bw.split(":")[2])] : []
             console.log(fwRaw, latestReport.fw)
             const newReport = [
                 {
@@ -97,10 +98,33 @@ class Reports extends Component {
                     fw8: newfw[7], bw8: newbw[7],
                 }
             ]
+            const new_csvData = (fwRaw.length===3 && bwRaw.length===3 && newfw.length && newbw.length) ? [1,2,3,4,5,6,7,8].map((num,index)=>{
+                return {
+                    name: `T${index+1}`, 
+                    fwRaw1: fwRaw[0][index], fwRaw2: fwRaw[1][index], fwRaw3: fwRaw[2][index], 
+                    bwRaw1: bwRaw[0][index], bwRaw2: bwRaw[1][index], bwRaw3: bwRaw[2][index], 
+                    newfw: newfw[index], newbw: newbw[index] 
+                }
+            }) : []
             console.log(newReport)
-            this.setState({report: newReport, rawData: {fwRaw, bwRaw, newfw, newbw}})
+            this.setState({
+                report: newReport, 
+                rawData: {
+                    fwRaw, 
+                    bwRaw, 
+                    newfw, 
+                    newbw,
+                    fwRaw1: fwRaw[0],
+                    fwRaw2: fwRaw[1],
+                    fwRaw3: fwRaw[2],
+                    bwRaw1: fwRaw[0],
+                    bwRaw2: fwRaw[1],
+                    bwRaw3: fwRaw[2],
+                },
+                csvData: new_csvData
+            })
         }, err => {
-            TOAST.pop({report: [], message: err.message, type: 'error'})
+            TOAST.pop({report: [], rawData:{}, csvData:[], message: err.message, type: 'error'})
         }).finally(()=> 
             this.setState({isLoading: false})
         )
@@ -158,7 +182,7 @@ class Reports extends Component {
         }
         API.getReports({params})
         .then((response)=>{
-            const newData = response.data.filter((report,index,self)=>
+            const newData = response.data.sort((a,b)=> new Date(b.created) - new Date(a.created)).filter((report,index,self)=>
                 index === self.findIndex((t) => (
                 t.activity_id === report.activity_id
               ))
@@ -385,7 +409,25 @@ class Reports extends Component {
                         </div>
                     </Col>
                     {id && <Col>
-                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Fresh Weight Test</div>
+                        <CSVLink data={gDp(st,'csvData',[])} headers={[
+                                { key: "name"},
+                                { label: "Fresh Weight R1", key: "fwRaw1" },
+                                { label: "Fresh Weight R2", key: "fwRaw3" },
+                                { label: "Fresh Weight R3", key: "fwRaw3" },
+                                { label: "Fresh Weight Average", key: "newfw"},
+                                { label: "Dry Weight R1", key: "bwRaw1" },
+                                { label: "Dry Weight R2", key: "bwRaw2" },
+                                { label: "Dry Weight R3", key: "bwRaw3" },
+                                { label: "Dry Weight Average", key: "newbw"},
+                            ]
+                            } target="_blank"
+                            filename={`${st.report_name}_report(${st.pageState.start_date}to${st.pageState.end_date}).csv`}
+                            >
+                            <Button color="primary" style={pr.apiRoute?  {padding: '0 30px', marginBottom: '10px'}:{padding: '0 30px'}}>
+                                Download Data CSV
+                            </Button>
+                        </CSVLink>
+                        <div style={{border: '1px solid black', background: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '5px', borderRadius: '5px'}}>Fresh Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -403,7 +445,7 @@ class Reports extends Component {
                             </tbody>
                         </table>
                         <br/>
-                        <div style={{background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Dry Weight Test</div>
+                        <div style={{border: '1px solid black', background: 'white', textAlign: 'center', marginBottom: '5px', borderRadius: '5px'}}>Dry Weight Test</div>
                         <table style={{width:'100%'}}>
                             <thead>
                                 <tr>
