@@ -146,6 +146,7 @@ class Products extends Component {
                 Header: "Action",
                 headerClassName: 'text-left',
                 accessor: "_actions",
+                width: 150,
                 Cell: row=> {
                     return <div>
                         <Button color="danger" style={{marginBottom: '5px', display: 'block', width: '100%'}} onClick={()=> this.cancelOrder(row)}><FaTimes/> Cancel</Button>
@@ -307,7 +308,7 @@ class Products extends Component {
                 <div style={message.is_read ? {} : {fontSize: '16px', fontWeight: '700'}}>- {message.message}</div>
             </div>)
         return (
-            <div style={{margin: '0 5% 15px'}}> 
+            <div style={{margin: '0 2.5% 15px'}}> 
                 <div className="pad-md">
                     <Row>
                         <Col className="margin-bottom-md">
